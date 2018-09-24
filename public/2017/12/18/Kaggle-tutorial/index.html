@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="vvvict0r">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="Kaggle尝鲜：探索泰坦尼克号事故幸存情况分析"/>
+  <meta property="og:description" content="Data Analysis, Gaming, and Life" />
+  <meta property="og:site_name" content="Brick Breaker"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://yoursite.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="Brick Breaker" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Brick Breaker</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/ohno.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">Kaggle尝鲜：探索泰坦尼克号事故幸存情况分析</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/vct0r">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:mailtophj@foxmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By vvvict0r</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2017-12-18</span>
+            <span class="time">18:40:01</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/Data/">Data</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Data-Analysis/">#Data Analysis</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>Kaggle 入门：探索泰坦尼克号事故幸存情况分析</p>
+<p><a href="https://www.kaggle.com/mrisdal/exploring-survival-on-the-titanic" target="_blank" rel="external">原文地址</a></p>
+<p>作者：梅根·丽思达(Megan L. Risdal)</p>
+<a id="more"></a> 
+<hr>
+<p>文章目录：</p>
+<ul>
+<li>1 介绍<ul>
+<li>1.1 载入并检查数据</li>
+</ul>
+</li>
+<li>2 特征工程<ul>
+<li>2.1 名字分析</li>
+<li>2.2 家庭存活情况分析</li>
+<li>2.3 处理更多变量</li>
+</ul>
+</li>
+<li>3 缺失数据处理<ul>
+<li>3.1 观测值插补</li>
+<li>3.2 预测性插补</li>
+<li>3.3 特征工程：第二阶段</li>
+</ul>
+</li>
+<li>4 预测<ul>
+<li>4.1 从源数据分离出训练数据和测试数据</li>
+<li>4.2 建立模型</li>
+<li>4.3 变量重要性分析</li>
+<li>4.4 开始预测！</li>
+</ul>
+</li>
+<li>5 结论</li>
+</ul>
+<hr>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h2><p>这是我第一次尝试使用 Kaggle 脚本。经过一段时间在 Kaggle 上的浏览和阅读其他用户写的脚本后，我决定对泰坦尼克号事件情况数据集进行分析。在此期间我也将生成一些数据可视化图片。这个实例中我用来预测幸存者的模型是基于随机森林(<code>randomForest</code>)方法建立的。我才刚入门机器学习这个领域，还有很多东西要学，欢迎大家在评论区进行反馈！</p>
+<p>在我脚本中主要包含三个部分：</p>
+<ul>
+<li>特征工程</li>
+<li>缺失数据插补</li>
+<li>预测！</li>
+</ul>
+<h3 id="1-1-载入并检查数据"><a href="#1-1-载入并检查数据" class="headerlink" title="1.1 载入并检查数据"></a>1.1 载入并检查数据</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 载入分析所用的包</div><div class="line"></div><div class="line"># 这些是用于数据可视化的包</div><div class="line">library(&apos;ggplot2&apos;)</div><div class="line">library(&apos;ggthemes&apos;)</div><div class="line">library(&apos;scales&apos;)</div><div class="line"></div><div class="line">library(&apos;dplyr&apos;) # 数据处理包</div><div class="line">library(&apos;mice&apos;) # 数据插补包</div><div class="line">library(&apos;randomForest&apos;) # 随机森林分类算法</div></pre></td></tr></table></figure>
+<p>载入需要的包后，我们要读入数据：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">train &lt;- read.csv(&apos;../input/train.csv&apos;, stringsAsFactors = F)</div><div class="line">test  &lt;- read.csv(&apos;../input/test.csv&apos;, stringsAsFactors = F)</div><div class="line"></div><div class="line">full  &lt;- bind_rows(train, test) # 结合训练数据和测试数据</div><div class="line"></div><div class="line"># 检查数据</div><div class="line">str(full)</div></pre></td></tr></table></figure></p>
+<p>代码运行得出的结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">## &apos;data.frame&apos;:    1309 obs. of  12 variables:</div><div class="line">##  $ PassengerId: int  1 2 3 4 5 6 7 8 9 10 ...</div><div class="line">##  $ Survived   : int  0 1 1 1 0 0 0 0 1 1 ...</div><div class="line">##  $ Pclass     : int  3 1 3 1 3 3 1 3 3 2 ...</div><div class="line">##  $ Name       : chr  &quot;Braund, Mr. Owen Harris&quot; &quot;Cumings, Mrs. John Bradley (Florence Briggs Thayer)&quot; &quot;Heikkinen, Miss. Laina&quot; &quot;Futrelle, Mrs. Jacques Heath (Lily May Peel)&quot; ...</div><div class="line">##  $ Sex        : chr  &quot;male&quot; &quot;female&quot; &quot;female&quot; &quot;female&quot; ...</div><div class="line">##  $ Age        : num  22 38 26 35 35 NA 54 2 27 14 ...</div><div class="line">##  $ SibSp      : int  1 1 0 1 0 0 0 3 0 1 ...</div><div class="line">##  $ Parch      : int  0 0 0 0 0 0 0 1 2 0 ...</div><div class="line">##  $ Ticket     : chr  &quot;A/5 21171&quot; &quot;PC 17599&quot; &quot;STON/O2. 3101282&quot; &quot;113803&quot; ...</div><div class="line">##  $ Fare       : num  7.25 71.28 7.92 53.1 8.05 ...</div><div class="line">##  $ Cabin      : chr  &quot;&quot; &quot;C85&quot; &quot;&quot; &quot;C123&quot; ...</div><div class="line">##  $ Embarked   : chr  &quot;S&quot; &quot;C&quot; &quot;S&quot; &quot;S&quot; ...</div></pre></td></tr></table></figure></p>
+<p>目前我们大概了解了所要分析的变量，它们的类型，以及一部分观测值。我们发现我们将要分析12个变量的1309个观测值。由于我们无法从一些变量名完全看出其意思，以下列表将帮助我们理解各个变量名所带有的含义：<br>|变量名|说明|<br>|—|—|<br>|Survived|幸存(1)与罹难(0)|<br>|Pclass|乘客等级|<br>|Name|乘客名字|<br>|Sex|乘客性别|<br>|Age|乘客年龄|<br>|SibSp|该乘客在船上的兄弟姐妹和配偶数量|<br>|Parch|该乘客在船上的双亲和儿女数量|<br>|Ticket|船票编号|<br>|Fare|船票价格|<br>|Cabin|舱位|<br>|Embarked|登船港口|</p>
+<h2 id="2-特征工程"><a href="#2-特征工程" class="headerlink" title="2 特征工程"></a>2 特征工程</h2><h3 id="2-1-名字分析"><a href="#2-1-名字分析" class="headerlink" title="2.1 名字分析"></a>2.1 名字分析</h3><p>我首先注意到的变量是<strong>乘客名字</strong>，因为我们可以将这个变量切片出更多变量来用于帮助我们的预测，或是用于创建新的变量。比如，乘客名字中包含了<strong>乘客头衔</strong>，我们还可以利用<strong>姓氏</strong>来代表其家庭。现在就开始<strong>特征工程</strong>分析吧！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 从乘客名字中分离出头衔</div><div class="line">full$Title &lt;- gsub(&apos;(.*, )|(\\..*)&apos;, &apos;&apos;, full$Name)</div><div class="line"></div><div class="line"># 根据性别显示头衔</div><div class="line">table(full$Sex, full$Title)</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">##         </div><div class="line">##          Capt Col Don Dona  Dr Jonkheer Lady Major Master Miss Mlle Mme</div><div class="line">##   female    0   0   0    1   1        0    1     0      0  260    2   1</div><div class="line">##   male      1   4   1    0   7        1    0     2     61    0    0   0</div><div class="line">##         </div><div class="line">##           Mr Mrs  Ms Rev Sir the Countess</div><div class="line">##   female   0 197   2   0   0            1</div><div class="line">##   male   757   0   0   8   1            0</div></pre></td></tr></table></figure></p>
+<p>处理特别头衔：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 将数量较少的头衔归类于“稀有头衔”(rare_title)</div><div class="line">rare_title &lt;- c(&apos;Dona&apos;, &apos;Lady&apos;, &apos;the Countess&apos;,&apos;Capt&apos;, &apos;Col&apos;, &apos;Don&apos;, </div><div class="line">                &apos;Dr&apos;, &apos;Major&apos;, &apos;Rev&apos;, &apos;Sir&apos;, &apos;Jonkheer&apos;)</div><div class="line"></div><div class="line"># 对 Mlle, Ms, Mme 这类头衔重新归类，因为这类头衔意思重复</div><div class="line">full$Title[full$Title == &apos;Mlle&apos;]        &lt;- &apos;Miss&apos; </div><div class="line">full$Title[full$Title == &apos;Ms&apos;]          &lt;- &apos;Miss&apos;</div><div class="line">full$Title[full$Title == &apos;Mme&apos;]         &lt;- &apos;Mrs&apos; </div><div class="line">full$Title[full$Title %in% rare_title]  &lt;- &apos;Rare Title&apos;</div><div class="line"></div><div class="line"># 再次根据性别显示头衔数量统计</div><div class="line">table(full$Sex, full$Title)</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">##         </div><div class="line">##          Master Miss  Mr Mrs Rare Title</div><div class="line">##   female      0  264   0 198          4</div><div class="line">##   male       61    0 757   0         25</div></pre></td></tr></table></figure></p>
+<p>接下来，从乘客名字中提取姓氏：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">full$Surname &lt;- sapply(full$Name,  </div><div class="line">                      function(x) strsplit(x, split = &apos;[,.]&apos;)[[1]][1])</div></pre></td></tr></table></figure></p>
+<p>于是我们得出一共有875个不一样的姓氏。</p>
+<h3 id="2-2-家庭存活情况分析"><a href="#2-2-家庭存活情况分析" class="headerlink" title="2.2 家庭存活情况分析"></a>2.2 家庭存活情况分析</h3><p>现在乘客名字已经被处理成新的变量了，我们可以将其更进一步创建家庭变量。首先我们要基于兄弟姐妹、伴侣(也许有人会有多个伴侣)、双亲及儿女数量来创建<strong>家庭规模</strong>变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 创建家庭规模变量，其规模包括乘客自己，所以最后有+1</div><div class="line">full$Fsize &lt;- full$SibSp + full$Parch + 1</div><div class="line"></div><div class="line"># 创建家庭变量</div><div class="line">full$Family &lt;- paste(full$Surname, full$Fsize, sep=&apos;_&apos;)</div></pre></td></tr></table></figure>
+<p>家庭规模变量是怎样的呢？为了更好了解其对幸存情况的影响，我们先根据训练数据中的这个变量来绘图：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 使用 ggplot2 来创建家庭规模和幸存情况之间的关系图</div><div class="line">ggplot(full[1:891,], aes(x = Fsize, fill = factor(Survived))) +</div><div class="line">  geom_bar(stat=&apos;count&apos;, position=&apos;dodge&apos;) +</div><div class="line">  scale_x_continuous(breaks=c(1:11)) +</div><div class="line">  labs(x = &apos;Family Size&apos;) +</div><div class="line">  theme_few()</div></pre></td></tr></table></figure></p>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-6-1.png" target="_blank" rel="external">img</a></p>
+<p>啊哈。现在我们能看出孤身一人在船上的和家庭规模在四人以上在船上的人幸存率较低。我们可以将这个变量归为三个等级，因为大型家庭的数量相对较少。现在创建<strong>离散家庭规模</strong>变量。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 将家庭规模变量离散化，分成个人、小型家庭、大型家庭三类</div><div class="line">full$FsizeD[full$Fsize == 1] &lt;- &apos;singleton&apos;</div><div class="line">full$FsizeD[full$Fsize &lt; 5 &amp; full$Fsize &gt; 1] &lt;- &apos;small&apos;</div><div class="line">full$FsizeD[full$Fsize &gt; 4] &lt;- &apos;large&apos;</div><div class="line"></div><div class="line"># 通过使用马赛克图(mosaic plot)来展示不同家庭规模幸存情况</div><div class="line">mosaicplot(table(full$FsizeD, full$Survived), main=&apos;Family Size by Survival&apos;, shade=TRUE)</div></pre></td></tr></table></figure>
+<p>马赛克图再次证明了我们之前的观点，即孤身一人在船上的和家庭中有四人以上在船上的人幸存率较低，而小型家庭幸存率则更高。我打算对年龄变量进行分析，然而数据集中有263行的年龄变量是缺失值，所以我们必须先处理好缺失值才能分析年龄。</p>
+<h2 id="2-3-处理更多变量"><a href="#2-3-处理更多变量" class="headerlink" title="2.3 处理更多变量"></a>2.3 处理更多变量</h2><p>还有哪些变量可以进行特征工程分析呢？也许<strong>舱位号</strong>也是很有价值的变量，因为舱位号中包含了甲板编号。接下来就研究一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 可以看出，这项变量包含了大量的缺失值</div><div class="line">full$Cabin[1:28]</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">##  [1] &quot;&quot;            &quot;C85&quot;         &quot;&quot;            &quot;C123&quot;        &quot;&quot;           </div><div class="line">##  [6] &quot;&quot;            &quot;E46&quot;         &quot;&quot;            &quot;&quot;            &quot;&quot;           </div><div class="line">## [11] &quot;G6&quot;          &quot;C103&quot;        &quot;&quot;            &quot;&quot;            &quot;&quot;           </div><div class="line">## [16] &quot;&quot;            &quot;&quot;            &quot;&quot;            &quot;&quot;            &quot;&quot;           </div><div class="line">## [21] &quot;&quot;            &quot;D56&quot;         &quot;&quot;            &quot;A6&quot;          &quot;&quot;           </div><div class="line">## [26] &quot;&quot;            &quot;&quot;            &quot;C23 C25 C27&quot;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"># 舱位号的首个字符便是甲板编号。例如：</div><div class="line">strsplit(full$Cabin[2], NULL)[[1]]</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">## [1] &quot;C&quot; &quot;8&quot; &quot;5&quot;</div></pre></td></tr></table></figure></p>
+<p>接下来创建甲板编号变量，获取从A - F的甲板编号：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">full$Deck&lt;-factor(sapply(full$Cabin, function(x) strsplit(x, NULL)[[1]][1]))</div></pre></td></tr></table></figure></p>
+<p>这部分我们还可以做很多，比如研究带有多个房间的船舱(例如，row 28: “C23 C25 C27”)，但考虑到这项变量比较少，我们不会深入研究这个。</p>
+<h2 id="3-缺失数据处理"><a href="#3-缺失数据处理" class="headerlink" title="3 缺失数据处理"></a>3 缺失数据处理</h2><p>现在我们将要开始研究缺失数据，通过插补来对其进行处理。我们有很多方法处理缺失数据。考虑到该数据集的规模较小，我们不会将带有缺失数据的观测(即行)或是变量(即列)完全删除。我们可以根据数据分布情况用合适的值替换缺失数据，这类值包括均值、中位数或是众数，或者，我们也可以用预测值。我们将使用后两种方法处理缺失值，而我会根据可视化数据来做出决定。</p>
+<h3 id="3-1-合理值插补"><a href="#3-1-合理值插补" class="headerlink" title="3.1 合理值插补"></a>3.1 合理值插补</h3><p>62号乘客和830号乘客的登船港口是缺失的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">full[c(62, 830), &apos;Embarked&apos;]</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">## [1] &quot;&quot; &quot;&quot;</div></pre></td></tr></table></figure></p>
+<p>经过一番考虑，我推断当前数据中有两个变量和登船港口有关，这两个变量是乘客等级和票价：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 排除带有缺失值的乘客ID</div><div class="line">embark_fare &lt;- full %&gt;%</div><div class="line">  filter(PassengerId != 62 &amp; PassengerId != 830)</div><div class="line"></div><div class="line"># 使用ggplot2来可视化登船港口情况，乘客等级和中位数票价</div><div class="line">ggplot(embark_fare, aes(x = Embarked, y = Fare, fill = factor(Pclass))) +</div><div class="line">  geom_boxplot() +</div><div class="line">  geom_hline(aes(yintercept=80), </div><div class="line">    colour=&apos;red&apos;, linetype=&apos;dashed&apos;, lwd=2) +</div><div class="line">  scale_y_continuous(labels=dollar_format()) +</div><div class="line">  theme_few()</div></pre></td></tr></table></figure></p>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-11-1.png" target="_blank" rel="external">img</a></p>
+<p>从图中我们可以看出，在 Charbourg (‘C’) 登船的头等舱乘客的票价中位数大概是$80，符合我们的缺失登船港口乘客数据的情况。所以，我们可以将这两个乘客的登船港口缺失值替换为’C’。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">full$Embarked[c(62, 830)] &lt;- &apos;C&apos;</div></pre></td></tr></table></figure>
+<p>我们继续处理缺失数据，第1044行的乘客信息的票价是缺失的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">full[1044, ]</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">##      PassengerId Survived Pclass               Name  Sex  Age SibSp Parch</div><div class="line">## 1044        1044       NA      3 Storey, Mr. Thomas male 60.5     0     0</div><div class="line">##      Ticket Fare Cabin Embarked Title Surname Fsize   Family    FsizeD</div><div class="line">## 1044   3701   NA              S    Mr  Storey     1 Storey_1 singleton</div><div class="line">##      Deck</div><div class="line">## 1044 &lt;NA&gt;</div></pre></td></tr></table></figure></p>
+<p>这是名由 Southampton(‘S’) 登船的三等舱乘客。根据相同船舱等级和登船港口，我们对其他乘客的票价情况进行可视化处理。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ggplot(full[full$Pclass == &apos;3&apos; &amp; full$Embarked == &apos;S&apos;, ], </div><div class="line">  aes(x = Fare)) +</div><div class="line">  geom_density(fill = &apos;#99d6ff&apos;, alpha=0.4) + </div><div class="line">  geom_vline(aes(xintercept=median(Fare, na.rm=T)),</div><div class="line">    colour=&apos;red&apos;, linetype=&apos;dashed&apos;, lwd=1) +</div><div class="line">  scale_x_continuous(labels=dollar_format()) +</div><div class="line">  theme_few()</div></pre></td></tr></table></figure>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-14-1.png" target="_blank" rel="external">img</a></p>
+<p>根据这个数据可视化图，由于他们的船舱等级和登船港口一致，我们可以将该缺失值替换为该图中中位数的数值，即$8.05。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">full$Fare[1044] &lt;- median(full[full$Pclass == &apos;3&apos; &amp; full$Embarked == &apos;S&apos;, ]$Fare, na.rm = TRUE)</div></pre></td></tr></table></figure>
+<h3 id="3-2-预测性插补"><a href="#3-2-预测性插补" class="headerlink" title="3.2 预测性插补"></a>3.2 预测性插补</h3><p>就如我们在之前所说，该数据集中有一些缺失的<strong>年龄</strong>数据。我们将在插补年龄的缺失数据时采用一些更有意思的方法。我们会创建根据其他变量预测年龄值的模型。</p>
+<p>显示缺失年龄值的数量：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sum(is.na(full$Age))</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">## [1] 263</div></pre></td></tr></table></figure></p>
+<p>我们也可以使用<code>rpart</code>包(递归划分回归)来预测缺失年龄值，但在这里我会使用<code>mice</code>包。你可以在<a href="http://www.jstatsoft.org/article/view/v045i03/v45i03.pdf" target="_blank" rel="external">这个链接</a>里阅读到更多有关使用R中的链式方程来进行多重插补的内容。我们先要分解因子变量，然后使用<code>mice</code>包来插补缺失数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"># 分解因子变量</div><div class="line">factor_vars &lt;- c(&apos;PassengerId&apos;,&apos;Pclass&apos;,&apos;Sex&apos;,&apos;Embarked&apos;,</div><div class="line">                 &apos;Title&apos;,&apos;Surname&apos;,&apos;Family&apos;,&apos;FsizeD&apos;)</div><div class="line"></div><div class="line">full[factor_vars] &lt;- lapply(full[factor_vars], function(x) as.factor(x))</div><div class="line"></div><div class="line"># 设置随机种子</div><div class="line">set.seed(129)</div><div class="line"></div><div class="line"># 使用mice包进行插补，除去无用变量，这里使用了随机森林方法</div><div class="line">mice_mod &lt;- mice(full[, !names(full) %in% c(&apos;PassengerId&apos;,&apos;Name&apos;,&apos;Ticket&apos;,&apos;Cabin&apos;,&apos;Family&apos;,&apos;Surname&apos;,&apos;Survived&apos;)], method=&apos;rf&apos;)</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">## </div><div class="line">##  iter imp variable</div><div class="line">##   1   1  Age  Deck</div><div class="line">##   1   2  Age  Deck</div><div class="line">##   1   3  Age  Deck</div><div class="line">##   1   4  Age  Deck</div><div class="line">##   1   5  Age  Deck</div><div class="line">##   2   1  Age  Deck</div><div class="line">##   2   2  Age  Deck</div><div class="line">##   2   3  Age  Deck</div><div class="line">##   2   4  Age  Deck</div><div class="line">##   2   5  Age  Deck</div><div class="line">##   3   1  Age  Deck</div><div class="line">##   3   2  Age  Deck</div><div class="line">##   3   3  Age  Deck</div><div class="line">##   3   4  Age  Deck</div><div class="line">##   3   5  Age  Deck</div><div class="line">##   4   1  Age  Deck</div><div class="line">##   4   2  Age  Deck</div><div class="line">##   4   3  Age  Deck</div><div class="line">##   4   4  Age  Deck</div><div class="line">##   4   5  Age  Deck</div><div class="line">##   5   1  Age  Deck</div><div class="line">##   5   2  Age  Deck</div><div class="line">##   5   3  Age  Deck</div><div class="line">##   5   4  Age  Deck</div><div class="line">##   5   5  Age  Deck</div></pre></td></tr></table></figure></p>
+<p>保存输出结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mice_output &lt;- complete(mice_mod)</div></pre></td></tr></table></figure></p>
+<p>现在对比一下原数据中乘客年龄分布和我们得出的结果，确保没出现太大偏差：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 绘出年龄分布图</div><div class="line">par(mfrow=c(1,2))</div><div class="line">hist(full$Age, freq=F, main=&apos;Age: Original Data&apos;, </div><div class="line">  col=&apos;darkgreen&apos;, ylim=c(0,0.04))</div><div class="line">hist(mice_output$Age, freq=F, main=&apos;Age: MICE Output&apos;, </div><div class="line">  col=&apos;lightgreen&apos;, ylim=c(0,0.04))</div></pre></td></tr></table></figure></p>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-18-1.png" target="_blank" rel="external">img</a></p>
+<p>看起来效果不错，接下来我们利用<code>mice</code>模型中的数据来替换原数据里的年龄值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"># 替换数据</div><div class="line">full$Age &lt;- mice_output$Age</div><div class="line"></div><div class="line"># 显示新数据中缺失数据的情况</div><div class="line">sum(is.na(full$Age))</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">## [1] 0</div></pre></td></tr></table></figure></p>
+<p>终于完成了对需要变量的所有缺失数据的处理！现在我们有了完整的年龄变量值，接下来我打算做些收尾工作。我们之后可以利用年龄值做更多的特征工程。</p>
+<h3 id="3-3-特征工程：第二阶段"><a href="#3-3-特征工程：第二阶段" class="headerlink" title="3.3 特征工程：第二阶段"></a>3.3 特征工程：第二阶段</h3><p>现在我们获得了所有人的年龄，我们可以创建一些基于年龄生成的变量：<strong>母亲</strong>和<strong>孩子</strong>。判断孩子的条件是18岁以下，而母亲的条件是：1)是女性，2)超过18岁，3)至少有一个小孩，4)头衔不是”小姐”。</p>
+<p>我们首先了解一下年龄和幸存情况的关系：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">ggplot(full[1:891,], aes(Age, fill = factor(Survived))) + </div><div class="line">  geom_histogram() + </div><div class="line">  # 我把性别也包括在内，因为我们知道性别也是一个很重要的因素</div><div class="line">  facet_grid(.~Sex) + </div><div class="line">  theme_few()</div></pre></td></tr></table></figure></p>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-20-1.png" target="_blank" rel="external">img</a></p>
+<p>创建分辨孩子的列，并判断是孩子还是成人：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">full$Child[full$Age &lt; 18] &lt;- &apos;Child&apos;</div><div class="line">full$Child[full$Age &gt;= 18] &lt;- &apos;Adult&apos;</div><div class="line"></div><div class="line"># 查看统计</div><div class="line">table(full$Child, full$Survived)</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">##        </div><div class="line">##           0   1</div><div class="line">##   Adult 484 274</div><div class="line">##   Child  65  68</div></pre></td></tr></table></figure></p>
+<p>看来孩子的幸存率确实会高一些，但即使是孩子也无法幸免于难。接下来，我们的特征工程还需要完成创建<strong>母亲</strong>变量。也许我们可以期待在泰坦尼克号上的母亲们能有更大的幸存几率。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 加入母亲变量</div><div class="line">full$Mother &lt;- &apos;Not Mother&apos;</div><div class="line">full$Mother[full$Sex == &apos;female&apos; &amp; full$Parch &gt; 0 &amp; full$Age &gt; 18 &amp; full$Title != &apos;Miss&apos;] &lt;- &apos;Mother&apos;</div><div class="line"></div><div class="line"># 显示统计</div><div class="line">table(full$Mother, full$Survived)</div></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">##             </div><div class="line">##                0   1</div><div class="line">##   Mother      16  39</div><div class="line">##   Not Mother 533 303</div></pre></td></tr></table></figure></p>
+<p>我们需要的变量现在都已经处理好了，里面也没有缺失数据。谨慎起见，我再检查一下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">md.pattern(full)</div></pre></td></tr></table></figure></p>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## Warning in data.matrix(x): NAs introduced by coercion</div><div class="line"></div><div class="line">## Warning in data.matrix(x): NAs introduced by coercion</div><div class="line"></div><div class="line">## Warning in data.matrix(x): NAs introduced by coercion</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">##     PassengerId Pclass Sex Age SibSp Parch Fare Embarked Title Surname</div><div class="line">## 150           1      1   1   1     1     1    1        1     1       1</div><div class="line">##  61           1      1   1   1     1     1    1        1     1       1</div><div class="line">##  54           1      1   1   1     1     1    1        1     1       1</div><div class="line">## 511           1      1   1   1     1     1    1        1     1       1</div><div class="line">##  30           1      1   1   1     1     1    1        1     1       1</div><div class="line">## 235           1      1   1   1     1     1    1        1     1       1</div><div class="line">## 176           1      1   1   1     1     1    1        1     1       1</div><div class="line">##  92           1      1   1   1     1     1    1        1     1       1</div><div class="line">##               0      0   0   0     0     0    0        0     0       0</div><div class="line">##     Fsize Family FsizeD Child Mother Ticket Survived Deck Name Cabin     </div><div class="line">## 150     1      1      1     1      1      1        1    1    0     0    2</div><div class="line">##  61     1      1      1     1      1      1        0    1    0     0    3</div><div class="line">##  54     1      1      1     1      1      0        1    1    0     0    3</div><div class="line">## 511     1      1      1     1      1      1        1    0    0     0    3</div><div class="line">##  30     1      1      1     1      1      0        0    1    0     0    4</div><div class="line">## 235     1      1      1     1      1      1        0    0    0     0    4</div><div class="line">## 176     1      1      1     1      1      0        1    0    0     0    4</div><div class="line">##  92     1      1      1     1      1      0        0    0    0     0    5</div><div class="line">##         0      0      0     0      0    352      418 1014 1309  1309 4402</div></pre></td></tr></table></figure>
+<p>太棒了！我们现在已经把所有泰坦尼克号数据集里的相关缺失值处理好了，其中用到的<code>mice</code>包也榜上了大忙。我们现在可以创建一些变量来帮我们建立预测幸存情况的模型。</p>
+<h2 id="4-预测"><a href="#4-预测" class="headerlink" title="4 预测"></a>4 预测</h2><p>我们终于能根据我们处理好的数据开始预测在泰坦尼克号上的乘客幸存情况了。我们将使用随机森林<code>randomForest</code>分类算法来进行预测。</p>
+<h3 id="4-1-分离出训练数据和测试数据"><a href="#4-1-分离出训练数据和测试数据" class="headerlink" title="4.1 分离出训练数据和测试数据"></a>4.1 分离出训练数据和测试数据</h3><p>我们的第一步是分离用于训练的数据和用于测试的数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">train &lt;- full[1:891,]</div><div class="line">test &lt;- full[892:1309,]</div></pre></td></tr></table></figure>
+<h3 id="4-2-建立模型"><a href="#4-2-建立模型" class="headerlink" title="4.2 建立模型"></a>4.2 建立模型</h3><p>然后对训练数据使用随机森林<code>randomForest</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"># 设置随机种子</div><div class="line">set.seed(754)</div><div class="line"></div><div class="line"># 建立模型(注意：不是所有变量都要使用)</div><div class="line">rf_model &lt;- randomForest(factor(Survived) ~ Pclass + Sex + Age + SibSp + Parch + </div><div class="line">                                            Fare + Embarked + Title + </div><div class="line">                                            FsizeD + Child + Mother,</div><div class="line">                                            data = train)</div><div class="line"></div><div class="line"># 显示模型误差</div><div class="line">plot(rf_model, ylim=c(0,0.36))</div><div class="line">legend(&apos;topright&apos;, colnames(rf_model$err.rate), col=1:3, fill=1:3)</div></pre></td></tr></table></figure>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-24-1.png" target="_blank" rel="external">img</a></p>
+<p>黑线表示总体误差率，大概在20%以下。红线和绿线分别表示死亡和幸存的误差率。现在我们就可以知道，我们预测死亡情况比预测幸存情况更为准确。那意味着什么呢？</p>
+<h3 id="4-3-变量重要性分析"><a href="#4-3-变量重要性分析" class="headerlink" title="4.3 变量重要性分析"></a>4.3 变量重要性分析</h3><p>我们来通过绘制平均精度下降图来看看变量重要性分布。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># 得到重要性</div><div class="line">importance    &lt;- importance(rf_model)</div><div class="line">varImportance &lt;- data.frame(Variables = row.names(importance), </div><div class="line">                            Importance = round(importance[ ,&apos;MeanDecreaseGini&apos;],2))</div><div class="line"></div><div class="line"># 创建基于重要性的排名变量</div><div class="line">rankImportance &lt;- varImportance %&gt;%</div><div class="line">  mutate(Rank = paste0(&apos;#&apos;,dense_rank(desc(Importance))))</div><div class="line"></div><div class="line"># 使用ggplot2来绘制相关变量重要性示意图</div><div class="line">ggplot(rankImportance, aes(x = reorder(Variables, Importance), </div><div class="line">    y = Importance, fill = Importance)) +</div><div class="line">  geom_bar(stat=&apos;identity&apos;) + </div><div class="line">  geom_text(aes(x = Variables, y = 0.5, label = Rank),</div><div class="line">    hjust=0, vjust=0.55, size = 4, colour = &apos;red&apos;) +</div><div class="line">  labs(x = &apos;Variables&apos;) +</div><div class="line">  coord_flip() + </div><div class="line">  theme_few()</div></pre></td></tr></table></figure>
+<p>?<a href="https://www.kaggle.io/svf/924638/c05c7b2409e224c760cdfb527a8dcfc4/__results___files/figure-html/unnamed-chunk-25-1.png" target="_blank" rel="external">img</a></p>
+<p>哇，幸亏我们创建了头衔变量！头衔变量是这些变量中相关重要性最高的一个。同时我对乘客等级排在第五位感到惊奇，也许这是因为我们看了电影《泰坦尼克号》得到的偏见。</p>
+<h3 id="4-4-开始预测！"><a href="#4-4-开始预测！" class="headerlink" title="4.4 开始预测！"></a>4.4 开始预测！</h3><p>我们终于来到了最后一步：做出预测！但我们依旧可以重复前面的步骤来对预测进行调整，比如采用别的模型或是变量的不同组合，来达到更好的预测效果。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 使用测试数据进行预测</div><div class="line">prediction &lt;- predict(rf_model, test)</div><div class="line"></div><div class="line"># 用两个列把结果保存到数据框中：乘客ID(PassengerId)和预测幸存情况(Survived (prediction))</div><div class="line">solution &lt;- data.frame(PassengerID = test$PassengerId, Survived = prediction)</div><div class="line"></div><div class="line"># 将结果写入文件中</div><div class="line">write.csv(solution, file = &apos;rf_mod_Solution.csv&apos;, row.names = F)</div></pre></td></tr></table></figure>
+<h2 id="5-结论"><a href="#5-结论" class="headerlink" title="5 结论"></a>5 结论</h2><p>感谢你阅读我对Kaggle数据集的第一次尝试。我打算在这方面能做得更多，当然了，欢迎大家对这个新手的笔记进行评论和建议。</p>
+<blockquote>
+<p>注：本文由 vcvc 翻译自 <a href="https://www.kaggle.com/mrisdal/exploring-survival-on-the-titanic" target="_blank" rel="external">Megan L. Risdal. Exploring the Titanic Dataset</a></p>
+</blockquote>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+

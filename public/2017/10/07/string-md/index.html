@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+  <!-- Html Head Tag-->
+  <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="vvvict0r">
+  <!-- Open Graph Data -->
+  <meta property="og:title" content="《数据科学中的R语言》之字符串处理入门"/>
+  <meta property="og:description" content="Data Analysis, Gaming, and Life" />
+  <meta property="og:site_name" content="Brick Breaker"/>
+  <meta property="og:type" content="article" />
+  <meta property="og:image" content="http://yoursite.com"/>
+  
+    <link rel="alternate" href="/atom.xml" title="Brick Breaker" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+
+  <!-- Site Title -->
+  <title>Brick Breaker</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <!-- Custom CSS -->
+  
+  <link rel="stylesheet" href="/css/style.light.css">
+
+  <!-- Google Analytics -->
+  
+
+</head>
+
+  <body>
+    <!-- Page Header -->
+
+
+<header class="site-header header-background" style="background-image: url(/img/ohno.jpg)">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="page-title with-background-image">
+          <p class="title">《数据科学中的R语言》之字符串处理入门</p>
+          <p class="subtitle"></p>
+        </div>
+        <div class="site-menu with-background-image">
+          <ul>
+            
+              <li>
+                <a href="/">
+                  
+                  Home
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="/archives">
+                  
+                  Archives
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="https://github.com/vct0r">
+                  
+                  Github
+                  
+                </a>
+              </li>
+            
+              <li>
+                <a href="mailto:mailtophj@foxmail.com">
+                  
+                  Email
+                  
+                </a>
+              </li>
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<article>
+  <div class="container typo">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-info text-muted">
+          
+            <!-- Author -->
+            <span class="author info">By vvvict0r</span>
+          
+          <!-- Date -->
+          <span class="date-time info">On
+            <span class="date">2017-10-07</span>
+            <span class="time">18:40:01</span>
+          </span>
+          
+          <!--  Categories  -->
+            <span class="categories info">Under 
+
+<a href="/categories/Data/">Data</a>
+</span>
+          
+        </div>
+        <!-- Tags -->
+        
+          <div class="post-tags text-muted">
+            Tags: 
+
+<a class="tag" href="/tags/Data-Analysis/">#Data Analysis</a>
+
+
+          </div>
+        
+        <!-- Post Main Content -->
+        <div class="post-content">
+          <p>《数据科学中的R语言》之字符串处理入门</p>
+<p>原文地址：<a href="http://r4ds.had.co.nz/strings.html#locales" target="_blank" rel="external">http://r4ds.had.co.nz/strings.html#locales</a><br>作者：<a href="http://hadley.nz/" target="_blank" rel="external">Hadley Wickham</a></p>
+<a id="more"></a> 
+<hr>
+<p>文章目录：</p>
+<ul>
+<li>1 介绍<ul>
+<li>1.1 前提条件</li>
+</ul>
+</li>
+<li>2 字符串基本操作<ul>
+<li>2.1 字符串长度</li>
+<li>2.2 合并字符串</li>
+<li>2.3 分割字符串</li>
+<li>2.4 字符串本地化处理</li>
+<li>2.5 小练习</li>
+</ul>
+</li>
+<li>3 用正则表达式匹配字符串<ul>
+<li>3.1 基本匹配操作</li>
+<li>3.2 锚点</li>
+<li>3.3 字符类型和多选符</li>
+<li>3.4 重复匹配</li>
+<li>3.5 分组和反向引用</li>
+</ul>
+</li>
+<li>4 相关工具<ul>
+<li>4.1 检测匹配结果</li>
+<li>4.2 小练习</li>
+<li>4.3 提取匹配结果</li>
+<li>4.4 分组匹配</li>
+<li>4.5 替换匹配结果</li>
+<li>4.6 切分</li>
+<li>4.7 寻找匹配位置</li>
+</ul>
+</li>
+<li>5 其他模式类型<ul>
+<li>5.1 小练习</li>
+</ul>
+</li>
+<li>6 正则表达式的其他用途</li>
+<li>7 stringi库<ul>
+<li>7.1 小练习</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h2><p>这篇文章将为你介绍如何使用R语言来处理字符串。你学会字符串的基本操作和如何创建字符串，但这章的重点会在正则表达式上。由于字符串通常包含未经处理、格式混乱的数据，所以正则表达式会在此发挥很大的作用。正则表达式是种简明的语言，用于描述字符串中的组织模式。当你第一次看到正则表达式时，他们就像躺在你键盘上的猫一样无从下手，但当你逐步理解时，你就明白了其意义。</p>
+<h3 id="1-1-前提条件"><a href="#1-1-前提条件" class="headerlink" title="1.1 前提条件"></a>1.1 前提条件</h3><p>这篇文章将以<code>stringr</code>包作为字符串处理的重心。由于我们通常不总会处理到文本数据，所以stringr包不是tidyverse包的核心组成部分，所以我们需要额外导入这个包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">library(tidyverse)</div><div class="line">library(stringr)</div></pre></td></tr></table></figure>
+<h2 id="2-字符串基本操作"><a href="#2-字符串基本操作" class="headerlink" title="2 字符串基本操作"></a>2 字符串基本操作</h2><p>你可以通过单引号或双引号来创建字符串。不同于其他语言，这两种方法并不会造成不同的结果。但我推荐使用双引号<code>&quot;&quot;</code>，除非你想要创建包含有多个双引号的字符串。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">string1 &lt;- &quot;This is a string&quot;</div><div class="line">string2 &lt;- &apos;If I want to include a &quot;quote&quot; inside a string, I use single quotes&apos;</div></pre></td></tr></table></figure>
+<p>如果你忘记加上第二个双引号(或单引号)就回车，在第二行行首会出现<code>+</code>，在这里我们叫它续行符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&gt; &quot;This is a string without a closing quote</div><div class="line">+ </div><div class="line">+ </div><div class="line">+ HELP I&apos;M STUCK</div></pre></td></tr></table></figure>
+<p>如果发生了这样的情况，可以按<code>Esc</code>来结束这次输入，也可以在结尾输入第二个双引号(或单引号)来完成输入。</p>
+<p>要想在字符串输入单引号或双引号而不引起错误的话，你可以使用<code>\</code>来为其“转义”：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">double_quote &lt;- &quot;\&quot;&quot; # or &apos;&quot;&apos;</div><div class="line">single_quote &lt;- &apos;\&apos;&apos; # or &quot;&apos;&quot;</div></pre></td></tr></table></figure>
+<p>这意味着，若是你想要输入反斜线符号”<code>\</code>“，则需要输入两次：”\“。</p>
+<p>但要当心，字符串的打印表示和其自身并不一样，因为打印表示会显示出转义符。如果想要看到其真正的样子，要用<code>writeLines()</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;\&quot;&quot;, &quot;\\&quot;)</div><div class="line">x</div><div class="line">#&gt; [1] &quot;\&quot;&quot; &quot;\\&quot;</div><div class="line">writeLines(x)</div><div class="line">#&gt; &quot;</div><div class="line">#&gt; \</div></pre></td></tr></table></figure>
+<p>这类特殊字符并不算多。最常用的便是”\n”，用来表示换行符(newline)，还有”\t”，表示制表符(tab)，你也可以通过输入<code>?&#39;&quot;&#39;</code>或<code>?&quot;&#39;&quot;</code>来查看完整的转义字符列表。有时你也会看到类似”\u00b5”的字符，这是种输入非英文字符的方法，适用于所有平台：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;\u00b5&quot;</div><div class="line">x</div><div class="line">#&gt; [1] &quot;µ&quot;</div></pre></td></tr></table></figure>
+<p>多个字符串通常存在一个字符向量中，你可以通过<code>c()</code>来创建：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">c(&quot;one&quot;, &quot;two&quot;, &quot;three&quot;)</div><div class="line">#&gt; [1] &quot;one&quot;   &quot;two&quot;   &quot;three&quot;</div></pre></td></tr></table></figure>
+<h3 id="2-1-字符串长度"><a href="#2-1-字符串长度" class="headerlink" title="2.1 字符串长度"></a>2.1 字符串长度</h3><p>R语言中本身自带有多个函数来处理字符串，但我们在此不使用它们，因为它们用起来不方便且难记。在此我们会使用stringr包提供的函数。这些函数的名字相较前者更为直观，而且都以<code>str_</code>开头。例如，<code>str_length()</code>表示字符串中的字符数量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_length(c(&quot;a&quot;, &quot;R for data science&quot;, NA))</div><div class="line">#&gt; [1]  1 18 NA</div></pre></td></tr></table></figure>
+<p>如果你使用RStudio的话，<code>str_</code>前缀会更为好用，因为当你输入<code>str_</code>时会触发其自动完成功能，让你能看到所有stringr包中的函数：</p>
+<p><img src="http://r4ds.had.co.nz/screenshots/stringr-autocomplete.png" alt="auto"></p>
+<h3 id="2-2-合并字符串"><a href="#2-2-合并字符串" class="headerlink" title="2.2 合并字符串"></a>2.2 合并字符串</h3><p>要想合并两个及以上的字符串，就要用<code>str_c()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">str_c(&quot;x&quot;, &quot;y&quot;)</div><div class="line">#&gt; [1] &quot;xy&quot;</div><div class="line">str_c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;)</div><div class="line">#&gt; [1] &quot;xyz&quot;</div></pre></td></tr></table></figure>
+<p>使用<code>seq</code>参数来控制其合并后字符串之间的字符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_c(&quot;x&quot;, &quot;y&quot;, sep = &quot;, &quot;)</div><div class="line">#&gt; [1] &quot;x, y&quot;</div></pre></td></tr></table></figure>
+<p>就如R语言中的其他函数一样，缺失值处理起来很麻烦。如果你想让缺失值输出为”NA”，可以使用<code>str_replace_na()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;abc&quot;, NA)</div><div class="line">str_c(&quot;|-&quot;, x, &quot;-|&quot;)</div><div class="line">#&gt; [1] &quot;|-abc-|&quot; NA</div><div class="line">str_c(&quot;|-&quot;, str_replace_na(x), &quot;-|&quot;)</div><div class="line">#&gt; [1] &quot;|-abc-|&quot; &quot;|-NA-|&quot;</div></pre></td></tr></table></figure>
+<p>如上所示，<code>str_c()</code>的输出结果也是向量，若是参数中含有固定字符串和向量，则会将固定字符串分别和各个向量结合：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_c(&quot;prefix-&quot;, c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), &quot;-suffix&quot;)</div><div class="line">#&gt; [1] &quot;prefix-a-suffix&quot; &quot;prefix-b-suffix&quot; &quot;prefix-c-suffix&quot;</div></pre></td></tr></table></figure>
+<p>而字符大小为0的对象则会被丢弃。这个特性在和<code>if</code>一同使用时会尤其有用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">name &lt;- &quot;Hadley&quot;</div><div class="line">time_of_day &lt;- &quot;morning&quot;</div><div class="line">birthday &lt;- FALSE</div><div class="line"></div><div class="line">str_c(</div><div class="line">  &quot;Good &quot;, time_of_day, &quot; &quot;, name,</div><div class="line">  if (birthday) &quot; and HAPPY BIRTHDAY&quot;,</div><div class="line">  &quot;.&quot;</div><div class="line">)</div><div class="line">#&gt; [1] &quot;Good morning Hadley.&quot;</div></pre></td></tr></table></figure>
+<p>要是想要将一个字符串向量结合成单个字符串，使用<code>collapse</code>参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_c(c(&quot;x&quot;, &quot;y&quot;, &quot;z&quot;), collapse = &quot;, &quot;)</div><div class="line">#&gt; [1] &quot;x, y, z&quot;</div></pre></td></tr></table></figure>
+<h3 id="2-3-分割字符串"><a href="#2-3-分割字符串" class="headerlink" title="2.3 分割字符串"></a>2.3 分割字符串</h3><p>你可以通过使用<code>str_sub()</code>来分割字符串。就如字符串一样，<code>str_sub()</code>也通过接受起点和终点的参数来确定切片的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;Apple&quot;, &quot;Banana&quot;, &quot;Pear&quot;)</div><div class="line">str_sub(x, 1, 3)</div><div class="line">#&gt; [1] &quot;App&quot; &quot;Ban&quot; &quot;Pea&quot;</div><div class="line"># negative numbers count backwards from end</div><div class="line">str_sub(x, -3, -1)</div><div class="line">#&gt; [1] &quot;ple&quot; &quot;ana&quot; &quot;ear&quot;</div></pre></td></tr></table></figure>
+<p>需要注意的是，<code>str_sub()</code>在字符串比切片始末点短时也不会出错，因为它会返回尽可能多的字符：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_sub(&quot;a&quot;, 1, 5)</div><div class="line">#&gt; [1] &quot;a&quot;</div></pre></td></tr></table></figure>
+<p>你也可以使用赋值形式来修改字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">str_sub(x, 1, 1) &lt;- str_to_lower(str_sub(x, 1, 1))</div><div class="line">x</div><div class="line">#&gt; [1] &quot;apple&quot;  &quot;banana&quot; &quot;pear&quot;</div></pre></td></tr></table></figure>
+<h3 id="2-4-字符串本地化处理"><a href="#2-4-字符串本地化处理" class="headerlink" title="2.4 字符串本地化处理"></a>2.4 字符串本地化处理</h3><p>之前我曾说过使用<code>str_to_lower()</code>来让字母变为小写。你也可以用<code>str_to_upper()</code>或<code>str_to_title()</code>来做类似的处理。然而，改变大小写事实上却比想象的复杂，因为不同语言有不同的大小写规则和形式。你可以通过定义其国别来应用相关规则：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"># 土耳其语中有两种i: 有点的和没有点的</div><div class="line"># 他们的大小写也有不一样的规则:</div><div class="line">str_to_upper(c(&quot;i&quot;, &quot;ı&quot;))</div><div class="line">#&gt; [1] &quot;I&quot; &quot;I&quot;</div><div class="line">str_to_upper(c(&quot;i&quot;, &quot;ı&quot;), locale = &quot;tr&quot;)</div><div class="line">#&gt; [1] &quot;İ&quot; &quot;I&quot;</div></pre></td></tr></table></figure>
+<p>本地化国别参数由ISO 639语言编码标准决定，其参数通常是两个或三个字母的缩写。如果你不知道你自己语言的参数代码，参阅<a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank" rel="external">维基上的列表</a>。如果你为该参数留空，则默认使用当前机子的语言本地化。</p>
+<p>另一个受本地化影响较大的操作是分类。R语言自带的<code>order()</code>和<code>sort()</code>函数基于当前本地化来分类字符串。如果你想要让分类在不同电脑间有更好的表现，就使用<code>str_sort()</code>和<code>str_order()</code>吧，这两个函数也带有<code>locale</code>参数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;eggplant&quot;, &quot;banana&quot;)</div><div class="line"></div><div class="line">str_sort(x, locale = &quot;en&quot;)  # English</div><div class="line">#&gt; [1] &quot;apple&quot;    &quot;banana&quot;   &quot;eggplant&quot;</div><div class="line"></div><div class="line">str_sort(x, locale = &quot;haw&quot;) # Hawaiian</div><div class="line">#&gt; [1] &quot;apple&quot;    &quot;eggplant&quot; &quot;banana&quot;</div></pre></td></tr></table></figure>
+<h3 id="2-5-小练习"><a href="#2-5-小练习" class="headerlink" title="2.5 小练习"></a>2.5 小练习</h3><ol>
+<li>有些不使用stringr包的代码中，通常会有<code>paste()</code>和<code>paste0()</code>。它们之间有什么不同？它们相当于stringr包中的什么函数呢？这些函数在处理缺失值时又有什么不同呢？</li>
+<li>用自己的话来阐述<code>str_c()</code>中<code>sep</code>和<code>collapse</code>参数之间的的不同。</li>
+<li>使用<code>str_length()</code>和<code>str_sub()</code>来从一个字符串中提取中间的字符。当字符串中的字符数量是复数时你怎么办？</li>
+<li><code>str_wrap()</code>有什么用？你什么时候会用到它？</li>
+<li><code>str_trim()</code>有什么用？它是不是<code>str_trim()</code>的反面函数？</li>
+<li>写出一个函数，让其完成如下类似操作：将向量<code>c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)</code>转变为字符串”a, b, and c”。思考若是其向量长度为0,1,或2时它会怎样。</li>
+</ol>
+<h2 id="3-用正则表达式匹配字符串"><a href="#3-用正则表达式匹配字符串" class="headerlink" title="3 用正则表达式匹配字符串"></a>3 用正则表达式匹配字符串</h2><p>正则表达式是个十分简明的语言，其让你能描述字符串中的组成模式。你需要一些时间来理解正则表达式，但一旦你能看懂它们，你会发现它们有用极了。</p>
+<p>在这里，我们将使用<code>str_view()</code>和<code>str_view_all()</code>来学习正则表达式。这两个函数输入一个字符向量和一个正则表达式，输出给你匹配结果。我们会从最简单的正则表达式开始，慢慢过渡到更复杂的表达式。一旦你学会模式匹配方法，你会学会如何应用这些点子到大量stringr函数中。</p>
+<h3 id="3-1-基本匹配操作"><a href="#3-1-基本匹配操作" class="headerlink" title="3.1 基本匹配操作"></a>3.1 基本匹配操作</h3><p>最简单的模式匹配是匹配对应一模一样的字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;)</div><div class="line">str_view(x, &quot;an&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图1&gt;</p>
+<p>接下来学习<code>.</code>的用法，它能匹配任何字符(除了换行符):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;.a.&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图2&gt;</p>
+<p>但若是”<code>.</code>“能匹配任何字符，它怎么才能匹配自己，即”<code>.</code>“字符呢？你只需要输入转义字符来告诉正则表达式你想匹配它就好了。就如字符串一样，正则表达式也使用反斜线<code>\</code>来转义特殊字符。所以要想匹配”.”，你只需要使用<code>\.</code>就好了。然而这也会造成麻烦。我们使用字符串来表现正则表达式，而\在字符串里也是个转义符号。所以若是要创建正则表达式的.，我们需要输入字符串”\.”。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"># To create the regular expression, we need \\</div><div class="line">dot &lt;- &quot;\\.&quot;</div><div class="line"></div><div class="line"># But the expression itself only contains one:</div><div class="line">writeLines(dot)</div><div class="line">#&gt; \.</div><div class="line"></div><div class="line"># And this tells R to look for an explicit .</div><div class="line">str_view(c(&quot;abc&quot;, &quot;a.c&quot;, &quot;bef&quot;), &quot;a\\.c&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图3&gt;</p>
+<p>如果\在正则表达式里用作转义字符，那要匹配反斜线\要怎么做呢？你还是需要让其转义，创建正则表达式\。要想使用正则表达式，你需要个字符串，这里还需要转义\。所以，你想要匹配反斜线\的话，你要输入”\\“————你需要四个反斜线才能匹配到一个真正的反斜线！</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;a\\b&quot;</div><div class="line">writeLines(x)</div><div class="line">#&gt; a\b</div><div class="line"></div><div class="line">str_view(x, &quot;\\\\&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图3&gt;</p>
+<h4 id="3-1-1-小练习"><a href="#3-1-1-小练习" class="headerlink" title="3.1.1 小练习"></a>3.1.1 小练习</h4><ol>
+<li>解释为什么这些字符串不能匹配到一个\：”\”, “\“, “\\”。</li>
+<li>如何匹配<code>&quot;&#39;\</code>？</li>
+<li><code>\..\..\..</code>这个正则表达式会匹配到什么？如何用一个字符串表现它？</li>
+</ol>
+<h3 id="3-2-锚点"><a href="#3-2-锚点" class="headerlink" title="3.2 锚点"></a>3.2 锚点</h3><p>默认情况下，正则表达式会匹配任何位置的字符串。使用锚点对正则表达式十分有用，那样正则表达式就能确定要匹配字符串首端或是末端的特定字符串。<br>你可以使用：</p>
+<ul>
+<li>^来匹配字符串的首端</li>
+<li>$来匹配字符串的末端</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;)</div><div class="line">str_view(x, &quot;^a&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图4&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;a$&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图5&gt;</p>
+<p>要想记住这两个符号，试试我从<a href="https://twitter.com/emisshula/status/323863393167613953" target="_blank" rel="external">Evan Misshula</a>学到的记忆法：<br>如果你一开始就拥有了力量(<code>^</code>)，那你到最后会收获金钱(<code>$</code>)。</p>
+<p>要想让正则表达式只匹配完整的一个字符串，使用^和$来匹配：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple pie&quot;, &quot;apple&quot;, &quot;apple cake&quot;)</div><div class="line">str_view(x, &quot;apple&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图6&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;^apple$&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图7&gt;</p>
+<p>你也可以使用<code>\b</code>来匹配两边有边界的单词。在R里我不经常用到它，但我在使用RStudio时会用来查找某个函数是否是其他函数的组成部分。例如，我会搜索<code>\bsum\b</code>来避免匹配到<code>summarise</code>, <code>summary</code>, <code>rowsum</code>这些函数。</p>
+<h4 id="3-2-1-小练习"><a href="#3-2-1-小练习" class="headerlink" title="3.2.1 小练习"></a>3.2.1 小练习</h4><ol>
+<li>如何匹配<code>&quot;$^$&quot;</code>这个字符串？</li>
+<li>根据<code>string::words</code>中的语料库，创建正则表达式来分别查找符合下列条件的单词：</li>
+</ol>
+<ul>
+<li><ol>
+<li>以”y”开头。</li>
+</ol>
+</li>
+<li><ol>
+<li>以”x”结束。</li>
+</ol>
+</li>
+<li><ol>
+<li>正好是三个字母组成。(拒绝使用<code>str_length()</code>作弊！)</li>
+</ol>
+</li>
+<li><ol>
+<li>带有七个以上的字母。<br>由于这个列表比较长，你或许想要使用<code>str_view()</code>中的<code>match</code>参数来只显示匹配到的或是未匹配到的单词。</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-3-字符类型和多选符"><a href="#3-3-字符类型和多选符" class="headerlink" title="3.3 字符类型和多选符"></a>3.3 字符类型和多选符</h3><p>正则表达式中还有很多特殊符号能够匹配多个字符。比如前面已经出现的<code>.</code>，可以匹配除了换行符的任何字符。以下是四个这类符号：</p>
+<ul>
+<li><code>\d</code>: 匹配任何整数.</li>
+<li><code>\s</code>：匹配任何空白符(例如空格符,制表符,和换行符).</li>
+<li><code>[abc]</code>: 能匹配a, b, 或c.</li>
+<li><code>[^abc]</code>: 匹配除了a, b, 或c以外的任何字符.</li>
+</ul>
+<p>记住，要想创建包含<code>\d</code>或<code>\s</code>的正则表达式，你要多写一个<code>\</code>，所以应该输入<code>&quot;\\d&quot;</code>或<code>&quot;\\s&quot;</code>。</p>
+<p>你也可以使用多选符来在一个或多个多选模式中选取字符。例如，<code>abc|d..f</code>将匹配”abc”或”deaf”。注意，<code>|</code>的优先权较低，所以<code>abc|xyz</code>将匹配<code>abc</code>或<code>xyz</code>而不是<code>abcyz</code>或者<code>abxyz</code>。就如一些数学符号一样，若是优先权问题困扰着你，你可以使用括号来让其意义更为清楚：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(c(&quot;grey&quot;, &quot;gray&quot;), &quot;gr(e|a)y&quot;)</div></pre></td></tr></table></figure>
+<h4 id="3-3-1-小练习"><a href="#3-3-1-小练习" class="headerlink" title="3.3.1 小练习"></a>3.3.1 小练习</h4><ol>
+<li>使用正则表达式匹配以下条件的单词：</li>
+</ol>
+<ul>
+<li><ol>
+<li>由元音开头。</li>
+</ol>
+</li>
+<li><ol>
+<li>只包含辅音字母的(提示：想想如何匹配”非”元音字母)。</li>
+</ol>
+</li>
+<li><ol>
+<li>以<code>ed</code>结尾，但不以<code>eed</code>结尾。</li>
+</ol>
+</li>
+<li><ol>
+<li>以<code>ing</code>或<code>ise</code>结尾</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>验证一下构词规则”i通常在e之前，除非在前面有c”</li>
+<li>“q”后面是否总跟着”u”？</li>
+<li>写出个正则表达式，匹配一个由英式英语而不是美式英语写出的单词。</li>
+<li>写出个正则表达式，匹配常见的电话号码。</li>
+</ol>
+<h3 id="3-4-重复匹配"><a href="#3-4-重复匹配" class="headerlink" title="3.4 重复匹配"></a>3.4 重复匹配</h3><p>这一部分我们将学习控制匹配的次数：</p>
+<ul>
+<li><code>?</code>: 0次或1次</li>
+<li>+: 1次及以上</li>
+<li>*: 0次及以上</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;1888 is the longest year in Roman numerals: MDCCCLXXXVIII&quot;</div><div class="line">str_view(x, &quot;CC?&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图8&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;CC+&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图9&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &apos;C[LX]+&apos;)</div></pre></td></tr></table></figure>
+<p>注意，这种操作符的优先度较高，所以你可以用<code>colou?r</code>来匹配其英式形式和美式形式。这意味着，其多数情况下要输入括号来注明，例如<code>bana(na)+</code>。</p>
+<p>你也可以标明需要匹配的次数：</p>
+<ul>
+<li>{n}: 正好n次</li>
+<li>{n,}: n次及以上</li>
+<li>{,m}: 最多m次</li>
+<li>{n,m}: n次和m次之间</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;C&#123;2&#125;&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图10&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;C&#123;2,&#125;&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图11&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &quot;C&#123;2,3&#125;&quot;)</div></pre></td></tr></table></figure>
+<p>默认情况下，这些匹配是”贪婪匹配”：他们将匹配尽可能长的字符串。当然你也能设置”懒惰匹配”，匹配出尽可能短的字符，只需在后面加上<code>?</code>即可。这是正则表达式的高级特性，而且十分有用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &apos;C&#123;2,3&#125;?&apos;)</div></pre></td></tr></table></figure>
+<p>&lt;截图12&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(x, &apos;C[LX]+?&apos;)</div></pre></td></tr></table></figure>
+<p>&lt;截图13&gt;</p>
+<h4 id="3-4-1-小练习"><a href="#3-4-1-小练习" class="headerlink" title="3.4.1 小练习"></a>3.4.1 小练习</h4><ol>
+<li>用<code>{m,n}</code>来表示<code>?</code>,<code>+</code>,<code>*</code>这三种匹配方式。</li>
+<li>用自己的话说一下这些正则表达式的作用(仔细阅读，判断我是用一个正则表达式还是一个字符串来定义正则表达式)：</li>
+</ol>
+<ul>
+<li><ol>
+<li><code>^.*$</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>&quot;\\{.+\\}&quot;</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>\d{4}-\d{2}-\d{2}</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>&quot;\\\\{4}&quot;</code></li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>写出个正则表达式，找出符合以下条件的单词：</li>
+</ol>
+<ul>
+<li><ol>
+<li>以三个辅音字母开头。</li>
+</ol>
+</li>
+<li><ol>
+<li>带有连续三个原因。</li>
+</ol>
+</li>
+<li><ol>
+<li>带有连续两个及以上元音-辅音字母对。</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>去完成<a href="https://regexcrossword.com/challenges/beginner" target="_blank" rel="external">链接中</a>的正则表达式练习</li>
+</ol>
+<h3 id="3-5-分组和反向引用"><a href="#3-5-分组和反向引用" class="headerlink" title="3.5 分组和反向引用"></a>3.5 分组和反向引用</h3><p>之前的部分，你学会如何使用括号来给表达式消除歧义。括号也能用于定义”分组”，这些分组能让你在之后使用<code>\1</code>、<code>\2</code>这样的符号进行<em>反向引用</em>。例如，以下正则表达式会找到所有包含重复字母组合的水果单词：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(fruit, &quot;(..)\\1&quot;, match = TRUE)</div></pre></td></tr></table></figure>
+<p>&lt;截图14&gt;</p>
+<h4 id="3-5-1-小练习"><a href="#3-5-1-小练习" class="headerlink" title="3.5.1 小练习"></a>3.5.1 小练习</h4><ol>
+<li>说出以下表达式会匹配到什么：</li>
+</ol>
+<ul>
+<li><ol>
+<li><code>(.)\1\1</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>&quot;(.)(.)\\2\\1&quot;</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>(..)\1</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>&quot;(.).\\1.\\1&quot;</code></li>
+</ol>
+</li>
+<li><ol>
+<li><code>&quot;(.)(.)(.).*\\3\\2\\1&quot;</code></li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>写出符合以下匹配条件的正则表达式：</li>
+</ol>
+<ul>
+<li><ol>
+<li>以相同字符开始和结束。</li>
+</ol>
+</li>
+<li><ol>
+<li>包含重复的字母对(例如，”church”包含两个”ch”)</li>
+</ol>
+</li>
+<li><ol>
+<li>包含一个重复了至少三次的字母(例如，”eleven”有三个”e”)</li>
+</ol>
+</li>
+</ul>
+<h2 id="4-相关工具"><a href="#4-相关工具" class="headerlink" title="4 相关工具"></a>4 相关工具</h2><p>到这里你已经学会了正则表达式的基本用法，是时候将它们用于解决实际问题了。这部分你将学会大量stringr包里的函数，它们能让你：</p>
+<ul>
+<li>确定哪些字符串能够被匹配</li>
+<li>找到匹配结果的位置</li>
+<li>提取匹配结果的内容</li>
+<li>替换匹配结果为其他内容</li>
+<li>基于匹配结果切分字符串</li>
+</ul>
+<p>这里要注意，因为正则表达式十分强大，想要用一个正则表达式来解决所有难题也很简单。<br>就如Jamie Zawinski所说：</p>
+<blockquote>
+<p>有些人面对一个难题时，会想“我知道，我会用正则表达式来解决”。于是，他们现在遇到了两个难题。</p>
+</blockquote>
+<p>作为个警示的例子，看看下面这个用来检查email地址是否有效的正则表达式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div></pre></td><td class="code"><pre><div class="line">(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t]</div><div class="line">)+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:</div><div class="line">\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(</div><div class="line">?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ </div><div class="line">\t]))*&quot;(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\0</div><div class="line">31]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\</div><div class="line">](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+</div><div class="line">(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:</div><div class="line">(?:\r\n)?[ \t])*))*|(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z</div><div class="line">|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)</div><div class="line">?[ \t])*)*\&lt;(?:(?:\r\n)?[ \t])*(?:@(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\</div><div class="line">r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[</div><div class="line"> \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)</div><div class="line">?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t]</div><div class="line">)*))*(?:,@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[</div><div class="line"> \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*</div><div class="line">)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t]</div><div class="line">)+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*)</div><div class="line">*:(?:(?:\r\n)?[ \t])*)?(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+</div><div class="line">|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r</div><div class="line">\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:</div><div class="line">\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t</div><div class="line">]))*&quot;(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031</div><div class="line">]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](</div><div class="line">?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?</div><div class="line">:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?</div><div class="line">:\r\n)?[ \t])*))*\&gt;(?:(?:\r\n)?[ \t])*)|(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?</div><div class="line">:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?</div><div class="line">[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)*:(?:(?:\r\n)?[ \t])*(?:(?:(?:[^()&lt;&gt;@,;:\\&quot;.\[\] </div><div class="line">\000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|</div><div class="line">\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;</div><div class="line">@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;</div><div class="line">(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t]</div><div class="line">)*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\</div><div class="line">&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?</div><div class="line">:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[</div><div class="line">\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*|(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-</div><div class="line">\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(</div><div class="line">?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)*\&lt;(?:(?:\r\n)?[ \t])*(?:@(?:[^()&lt;&gt;@,;</div><div class="line">:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([</div><div class="line">^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;</div><div class="line">.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\</div><div class="line">]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*(?:,@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\</div><div class="line">[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\</div><div class="line">r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] </div><div class="line">\000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]</div><div class="line">|\\.)*\](?:(?:\r\n)?[ \t])*))*)*:(?:(?:\r\n)?[ \t])*)?(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \0</div><div class="line">00-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\</div><div class="line">.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,</div><div class="line">;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?</div><div class="line">:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*))*@(?:(?:\r\n)?[ \t])*</div><div class="line">(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.</div><div class="line">\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t])*(?:[</div><div class="line">^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]</div><div class="line">]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\&gt;(?:(?:\r\n)?[ \t])*)(?:,\s*(</div><div class="line">?:(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\</div><div class="line">&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)(?:\.(?:(</div><div class="line">?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[</div><div class="line">\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t</div><div class="line">])*))*@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t</div><div class="line">])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?</div><div class="line">:\.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|</div><div class="line">\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*|(?:</div><div class="line">[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\</div><div class="line">]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)*\&lt;(?:(?:\r\n)</div><div class="line">?[ \t])*(?:@(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;</div><div class="line">()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)</div><div class="line">?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;</div><div class="line">@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*(?:,@(?:(?:\r\n)?[</div><div class="line"> \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,</div><div class="line">;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\.(?:(?:\r\n)?[ \t]</div><div class="line">)*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\</div><div class="line">&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*)*:(?:(?:\r\n)?[ \t])*)?</div><div class="line">(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.</div><div class="line">\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])*)(?:\.(?:(?:</div><div class="line">\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z|(?=[\[</div><div class="line">&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|&quot;(?:[^\&quot;\r\\]|\\.|(?:(?:\r\n)?[ \t]))*&quot;(?:(?:\r\n)?[ \t])</div><div class="line">*))*@(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])</div><div class="line">+|\Z|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*)(?:\</div><div class="line">.(?:(?:\r\n)?[ \t])*(?:[^()&lt;&gt;@,;:\\&quot;.\[\] \000-\031]+(?:(?:(?:\r\n)?[ \t])+|\Z</div><div class="line">|(?=[\[&quot;()&lt;&gt;@,;:\\&quot;.\[\]]))|\[([^\[\]\r\\]|\\.)*\](?:(?:\r\n)?[ \t])*))*\&gt;(?:(</div><div class="line">?:\r\n)?[ \t])*))*)?;\s*)</div></pre></td></tr></table></figure>
+<p>这是个相当典型的例子(因为email地址通常惊人地复杂)，但在实际代码里经常被用到。你可以查看<a href="http://stackoverflow.com/a/201378" target="_blank" rel="external">该StackOverflow链接</a>以获得更多细节。</p>
+<p>别忘了你在使用编程语言，你任意使用其他工具。通常情况下，创建一系列简单的正则表达式会比创建一整个复杂的正则表达式要简单。如果你创建正则表达式过程中遇到困难，你可以停下想想，看是否能将问题简化成简单点的问题，在遇到下个问题前解决所有问题。</p>
+<h3 id="4-1-检测匹配结果"><a href="#4-1-检测匹配结果" class="headerlink" title="4.1 检测匹配结果"></a>4.1 检测匹配结果</h3><p>要想知道一个字符向量是否符合一个模式，使用<code>str_detect()</code>函数。它会返回输入向量一样长度的逻辑向量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;)</div><div class="line">str_detect(x, &quot;e&quot;)</div><div class="line">#&gt; [1]  TRUE FALSE  TRUE</div></pre></td></tr></table></figure>
+<p>记住，当你在数值型环境中使用逻辑向量时，<code>FALSE</code>的值为0，而<code>TRUE</code>的值为1。所以要是你想知道关于匹配结果的一些情况，<code>sum()</code>和<code>mean()</code>在此会很有用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># 有多少单词以t开头?</div><div class="line">sum(str_detect(words, &quot;^t&quot;))</div><div class="line">#&gt; [1] 65</div><div class="line"></div><div class="line"># 由元音结尾的单词占多大比例?</div><div class="line">mean(str_detect(words, &quot;[aeiou]$&quot;))</div><div class="line">#&gt; [1] 0.277</div></pre></td></tr></table></figure>
+<p>当你遇到复杂的逻辑匹配条件时(例如，要匹配a或b，但没有d的话不匹配c)，相较于使用正则表达式，使用多个<code>str_detect()</code>来调用逻辑运算符会处理起来更简单。例如，下面是两个匹配没有元音字母单词的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># 找到所有至少包含一个元音字母的单词，将其除外</div><div class="line">no_vowels_1 &lt;- !str_detect(words, &quot;[aeiou]&quot;)</div><div class="line"></div><div class="line"># 找到所有只包含辅音字母的单词</div><div class="line">no_vowels_2 &lt;- str_detect(words, &quot;^[^aeiou]+$&quot;)</div><div class="line"></div><div class="line">identical(no_vowels_1, no_vowels_2)</div><div class="line">#&gt; [1] TRUE</div></pre></td></tr></table></figure>
+<p>两种方法的结果是一样的，但我觉得第一种方法明显更简单明了。当你的正则表达式变得相当复杂时，试着将其分成一个个小部分，再给它们分别取名字，最后再用逻辑运算符来将它们结合起来。</p>
+<p>通常我们使用<code>str_detect()</code>来选择符合某种模式的元素。你可以将其运用于逻辑切片，或是较为方便的<code>str_subset()</code>分装器：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">words[str_detect(words, &quot;x$&quot;)]</div><div class="line">#&gt; [1] &quot;box&quot; &quot;sex&quot; &quot;six&quot; &quot;tax&quot;</div><div class="line">str_subset(words, &quot;x$&quot;)</div><div class="line">#&gt; [1] &quot;box&quot; &quot;sex&quot; &quot;six&quot; &quot;tax&quot;</div></pre></td></tr></table></figure>
+<p>通常情况下，你的字符串属于某个数据框中的一列，我们会使用<code>filter()</code>处理它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">df &lt;- tibble(</div><div class="line">  word = words, </div><div class="line">  i = seq_along(word)</div><div class="line">)</div><div class="line">df %&gt;% </div><div class="line">  filter(str_detect(words, &quot;x$&quot;))</div><div class="line">#&gt; # A tibble: 4 × 2</div><div class="line">#&gt;    word     i</div><div class="line">#&gt;   &lt;chr&gt; &lt;int&gt;</div><div class="line">#&gt; 1   box   108</div><div class="line">#&gt; 2   sex   747</div><div class="line">#&gt; 3   six   772</div><div class="line">#&gt; 4   tax   841</div></pre></td></tr></table></figure>
+<p><code>str_detect()</code>的一个变体则是<code>str_count()</code>，这个函数不是简单返回对或错，而是告诉你在这一个字符串中有多少个符合条件的匹配结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;banana&quot;, &quot;pear&quot;)</div><div class="line">str_count(x, &quot;a&quot;)</div><div class="line">#&gt; [1] 1 3 1</div><div class="line"></div><div class="line"># On average, how many vowels per word?</div><div class="line">mean(str_count(words, &quot;[aeiou]&quot;))</div><div class="line">#&gt; [1] 1.99</div></pre></td></tr></table></figure>
+<p>和<code>mutate()</code>一起使用<code>str_count()</code>效果也很好：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">df %&gt;% </div><div class="line">  mutate(</div><div class="line">    vowels = str_count(word, &quot;[aeiou]&quot;),</div><div class="line">    consonants = str_count(word, &quot;[^aeiou]&quot;)</div><div class="line">  )</div><div class="line">#&gt; # A tibble: 980 × 4</div><div class="line">#&gt;       word     i vowels consonants</div><div class="line">#&gt;      &lt;chr&gt; &lt;int&gt;  &lt;int&gt;      &lt;int&gt;</div><div class="line">#&gt; 1        a     1      1          0</div><div class="line">#&gt; 2     able     2      2          2</div><div class="line">#&gt; 3    about     3      3          2</div><div class="line">#&gt; 4 absolute     4      4          4</div><div class="line">#&gt; 5   accept     5      2          4</div><div class="line">#&gt; 6  account     6      3          4</div><div class="line">#&gt; # ... with 974 more rows</div></pre></td></tr></table></figure>
+<p>值得注意的是，这些匹配结果不会重叠。例如，在<code>abababa</code>这个字符串中，你觉得<code>aba</code>会被匹配到多少次呢？正则表达式告诉你是两次而不是三次：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">str_count(&quot;abababa&quot;, &quot;aba&quot;)</div><div class="line">#&gt; [1] 2</div><div class="line">str_view_all(&quot;abababa&quot;, &quot;aba&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图15&gt;</p>
+<p>注意<code>str_view_all()</code>的用法。就如你刚知道的，很多stringr函数都是成对出现的：一个函数用于匹配单个结果，另一个匹配所有结果。而那后者则通常带有后缀<code>_all</code>。</p>
+<h3 id="4-2-小练习"><a href="#4-2-小练习" class="headerlink" title="4.2 小练习"></a>4.2 小练习</h3><ol>
+<li>对于以下练习，试着使用单个正则表达式，和多个<code>str_detect()</code>调用来分别完成。</li>
+</ol>
+<ul>
+<li><ol>
+<li>找到所有以x开头或结尾的单词。</li>
+</ol>
+</li>
+<li><ol>
+<li>找到所有以元音字母开头和以辅音字母结束的单词。</li>
+</ol>
+</li>
+<li><ol>
+<li>有没有包含所有元音字母的单词。</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>什么单词的元音字母数量最多？什么单词中元音字母所占比例最大？(提示：这个问题中的分母是什么呢？)</li>
+</ol>
+<h3 id="4-3-提取匹配结果"><a href="#4-3-提取匹配结果" class="headerlink" title="4.3 提取匹配结果"></a>4.3 提取匹配结果</h3><p>要想提取文本里匹配结果，可以使用<code>str_extract()</code>。这次，我将用个更为复杂的例子。我将用到<a href="https://en.wikipedia.org/wiki/Harvard_sentences" target="_blank" rel="external">Harvard sentences</a>，这是用于检测VOIP系统的一套文本，但在练习正则表达式时也一样有用。它们内置于<code>string::sentences</code>里：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">length(sentences)</div><div class="line">#&gt; [1] 720</div><div class="line">head(sentences)</div><div class="line">#&gt; [1] &quot;The birch canoe slid on the smooth planks.&quot; </div><div class="line">#&gt; [2] &quot;Glue the sheet to the dark blue background.&quot;</div><div class="line">#&gt; [3] &quot;It&apos;s easy to tell the depth of a well.&quot;     </div><div class="line">#&gt; [4] &quot;These days a chicken leg is a rare dish.&quot;   </div><div class="line">#&gt; [5] &quot;Rice is often served in round bowls.&quot;       </div><div class="line">#&gt; [6] &quot;The juice of lemons makes fine punch.&quot;</div></pre></td></tr></table></figure>
+<p>如果我们想找到所有包含颜色的句子，我们首先创建一个以颜色名字构成的向量，然后将其转变为正则表达式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">colours &lt;- c(&quot;red&quot;, &quot;orange&quot;, &quot;yellow&quot;, &quot;green&quot;, &quot;blue&quot;, &quot;purple&quot;)</div><div class="line">colour_match &lt;- str_c(colours, collapse = &quot;|&quot;)</div><div class="line">colour_match</div><div class="line">#&gt; [1] &quot;red|orange|yellow|green|blue|purple&quot;</div></pre></td></tr></table></figure>
+<p>现在我们就能选出那些包含颜色词的句子了，然后提取出来看看它们都是什么：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">has_colour &lt;- str_subset(sentences, colour_match)</div><div class="line">matches &lt;- str_extract(has_colour, colour_match)</div><div class="line">head(matches)</div><div class="line">#&gt; [1] &quot;blue&quot; &quot;blue&quot; &quot;red&quot;  &quot;red&quot;  &quot;red&quot;  &quot;blue&quot;</div></pre></td></tr></table></figure>
+<p>注意，<code>str_extract()</code>只会提取其首次匹配的结果。我们可以直接选取带有一个匹配结果以上的所有句子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">more &lt;- sentences[str_count(sentences, colour_match) &gt; 1]</div><div class="line">str_view_all(more, colour_match)</div></pre></td></tr></table></figure>
+<p>&lt;截图16&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">str_extract(more, colour_match)</div><div class="line">#&gt; [1] &quot;blue&quot;   &quot;green&quot;  &quot;orange&quot;</div></pre></td></tr></table></figure>
+<p>这是stringr函数中的常见模式，因为只处理一次匹配能让你使用更为简单的数据结构。要想得到所有匹配结果，使用<code>str_extract_all()</code>。它将返回一个列表：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">str_extract_all(more, colour_match)</div><div class="line">#&gt; [[1]]</div><div class="line">#&gt; [1] &quot;blue&quot; &quot;red&quot; </div><div class="line">#&gt; </div><div class="line">#&gt; [[2]]</div><div class="line">#&gt; [1] &quot;green&quot; &quot;red&quot;  </div><div class="line">#&gt; </div><div class="line">#&gt; [[3]]</div><div class="line">#&gt; [1] &quot;orange&quot; &quot;red&quot;</div></pre></td></tr></table></figure>
+<p>你将在<a href="http://r4ds.had.co.nz/vectors.html#lists" target="_blank" rel="external">lists</a>部分和<a href="http://r4ds.had.co.nz/iteration.html#iteration" target="_blank" rel="external">iteration</a>部分了解到更多关于列表的信息。</p>
+<p>如果你使用<code>simplify = TRUE</code>参数，<code>str_extract_all()</code>会返回一个矩阵：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">str_extract_all(more, colour_match, simplify = TRUE)</div><div class="line">#&gt;      [,1]     [,2] </div><div class="line">#&gt; [1,] &quot;blue&quot;   &quot;red&quot;</div><div class="line">#&gt; [2,] &quot;green&quot;  &quot;red&quot;</div><div class="line">#&gt; [3,] &quot;orange&quot; &quot;red&quot;</div><div class="line"></div><div class="line">x &lt;- c(&quot;a&quot;, &quot;a b&quot;, &quot;a b c&quot;)</div><div class="line">str_extract_all(x, &quot;[a-z]&quot;, simplify = TRUE)</div><div class="line">#&gt;      [,1] [,2] [,3]</div><div class="line">#&gt; [1,] &quot;a&quot;  &quot;&quot;   &quot;&quot;  </div><div class="line">#&gt; [2,] &quot;a&quot;  &quot;b&quot;  &quot;&quot;  </div><div class="line">#&gt; [3,] &quot;a&quot;  &quot;b&quot;  &quot;c&quot;</div></pre></td></tr></table></figure>
+<h4 id="4-3-1-小练习"><a href="#4-3-1-小练习" class="headerlink" title="4.3.1 小练习"></a>4.3.1 小练习</h4><ol>
+<li><p>在之前的例子中，你会发现那个正则表达式会匹配到”flickered”，但它不是颜色词。修改该正则表达式以修复这个问题。</p>
+</li>
+<li><p>从 Harvard sentences 数据中，提取：</p>
+</li>
+</ol>
+<ul>
+<li><ol>
+<li>每个句子的第一个单词。</li>
+</ol>
+</li>
+<li><ol>
+<li>所有以<code>ing</code>结尾的单词。</li>
+</ol>
+</li>
+<li><ol>
+<li>所有复数词。</li>
+</ol>
+</li>
+</ul>
+<h3 id="4-4-分组匹配"><a href="#4-4-分组匹配" class="headerlink" title="4.4 分组匹配"></a>4.4 分组匹配</h3><p>这篇文章前面些内容里，我们谈到了使用括号来明确优先级和匹配时的反向引用。你也可以使用括号来提取整个匹配结果的某些部分。例如，我们要想提取句子里的名词。我们可以直接找出那些在”a”或”the”后面的单词。想要在正则表达式中定义一个“单词”的方式比较特别，所以在此我将使用个方法来匹配尽量符合条件的单词：一串至少有一个非空格字符的字符串。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">noun &lt;- &quot;(a|the) ([^ ]+)&quot;</div><div class="line"></div><div class="line">has_noun &lt;- sentences %&gt;%</div><div class="line">  str_subset(noun) %&gt;%</div><div class="line">  head(10)</div><div class="line">has_noun %&gt;% </div><div class="line">  str_extract(noun)</div><div class="line">#&gt;  [1] &quot;the smooth&quot; &quot;the sheet&quot;  &quot;the depth&quot;  &quot;a chicken&quot;  &quot;the parked&quot;</div><div class="line">#&gt;  [6] &quot;the sun&quot;    &quot;the huge&quot;   &quot;the ball&quot;   &quot;the woman&quot;  &quot;a helps&quot;</div></pre></td></tr></table></figure>
+<p><code>str_extract()</code>会返回完整的匹配结果；而<code>str_match()</code>会返回每个独立的组成部分，返回形式将是个矩阵而不是字符向量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">has_noun %&gt;% </div><div class="line">  str_match(noun)</div><div class="line">#&gt;       [,1]         [,2]  [,3]     </div><div class="line">#&gt;  [1,] &quot;the smooth&quot; &quot;the&quot; &quot;smooth&quot; </div><div class="line">#&gt;  [2,] &quot;the sheet&quot;  &quot;the&quot; &quot;sheet&quot;  </div><div class="line">#&gt;  [3,] &quot;the depth&quot;  &quot;the&quot; &quot;depth&quot;  </div><div class="line">#&gt;  [4,] &quot;a chicken&quot;  &quot;a&quot;   &quot;chicken&quot;</div><div class="line">#&gt;  [5,] &quot;the parked&quot; &quot;the&quot; &quot;parked&quot; </div><div class="line">#&gt;  [6,] &quot;the sun&quot;    &quot;the&quot; &quot;sun&quot;    </div><div class="line">#&gt;  [7,] &quot;the huge&quot;   &quot;the&quot; &quot;huge&quot;   </div><div class="line">#&gt;  [8,] &quot;the ball&quot;   &quot;the&quot; &quot;ball&quot;   </div><div class="line">#&gt;  [9,] &quot;the woman&quot;  &quot;the&quot; &quot;woman&quot;  </div><div class="line">#&gt; [10,] &quot;a helps&quot;    &quot;a&quot;   &quot;helps&quot;</div></pre></td></tr></table></figure>
+<p>(很明显，我们的方法仍有很大欠缺，它不仅匹配了名词还匹配了smooth和parked这类形容词。)</p>
+<p>如果你的数据是tibble类型，通常使用<code>tidyr::extract()</code>来处理更简单。它用起来和<code>str_match()</code>差不多，但要你为匹配结果命名：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">tibble(sentence = sentences) %&gt;% </div><div class="line">  tidyr::extract(</div><div class="line">    sentence, c(&quot;article&quot;, &quot;noun&quot;), &quot;(a|the) ([^ ]+)&quot;, </div><div class="line">    remove = FALSE</div><div class="line">  )</div><div class="line">#&gt; # A tibble: 720 × 3</div><div class="line">#&gt;                                      sentence article    noun</div><div class="line">#&gt; *                                       &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;</div><div class="line">#&gt; 1  The birch canoe slid on the smooth planks.     the  smooth</div><div class="line">#&gt; 2 Glue the sheet to the dark blue background.     the   sheet</div><div class="line">#&gt; 3      It&apos;s easy to tell the depth of a well.     the   depth</div><div class="line">#&gt; 4    These days a chicken leg is a rare dish.       a chicken</div><div class="line">#&gt; 5        Rice is often served in round bowls.    &lt;NA&gt;    &lt;NA&gt;</div><div class="line">#&gt; 6       The juice of lemons makes fine punch.    &lt;NA&gt;    &lt;NA&gt;</div><div class="line">#&gt; # ... with 714 more rows</div></pre></td></tr></table></figure>
+<p>如<code>str_extract()</code>一样，如果你想要得到每个字符串的所有匹配结果，你要用<code>str_match_all()</code>来获取。</p>
+<h4 id="4-4-1-小练习"><a href="#4-4-1-小练习" class="headerlink" title="4.4.1 小练习"></a>4.4.1 小练习</h4><ol>
+<li><p>找到所有紧跟着数字的单词，例如在”one”或”two”之后的单词。将这些数字连同单词一起提取出来。</p>
+</li>
+<li><p>找到所有的缩略词。将其以单引号为分界切片。</p>
+</li>
+</ol>
+<h3 id="4-5-替换匹配结果"><a href="#4-5-替换匹配结果" class="headerlink" title="4.5 替换匹配结果"></a>4.5 替换匹配结果</h3><p><code>str_replace()</code>和<code>str_replace_all()</code>可以让你以其他字符串替换匹配结果。最简单的用法是将匹配结果替换为某个确定的字符串：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;apple&quot;, &quot;pear&quot;, &quot;banana&quot;)</div><div class="line">str_replace(x, &quot;[aeiou]&quot;, &quot;-&quot;)</div><div class="line">#&gt; [1] &quot;-pple&quot;  &quot;p-ar&quot;   &quot;b-nana&quot;</div><div class="line">str_replace_all(x, &quot;[aeiou]&quot;, &quot;-&quot;)</div><div class="line">#&gt; [1] &quot;-ppl-&quot;  &quot;p--r&quot;   &quot;b-n-n-&quot;</div></pre></td></tr></table></figure>
+<p>使用<code>str_replace_all()</code>还可以进行多重替换：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">x &lt;- c(&quot;1 house&quot;, &quot;2 cars&quot;, &quot;3 people&quot;)</div><div class="line">str_replace_all(x, c(&quot;1&quot; = &quot;one&quot;, &quot;2&quot; = &quot;two&quot;, &quot;3&quot; = &quot;three&quot;))</div><div class="line">#&gt; [1] &quot;one house&quot;    &quot;two cars&quot;     &quot;three people&quot;</div></pre></td></tr></table></figure>
+<p>不只是用写好的字符串来替换，你还可以用反向引用的结果来作为替换值。下列代码中我改变了匹配到的第二和第三个单词的位置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">sentences %&gt;% </div><div class="line">  str_replace(&quot;([^ ]+) ([^ ]+) ([^ ]+)&quot;, &quot;\\1 \\3 \\2&quot;) %&gt;% </div><div class="line">  head(5)</div><div class="line">#&gt; [1] &quot;The canoe birch slid on the smooth planks.&quot; </div><div class="line">#&gt; [2] &quot;Glue sheet the to the dark blue background.&quot;</div><div class="line">#&gt; [3] &quot;It&apos;s to easy tell the depth of a well.&quot;     </div><div class="line">#&gt; [4] &quot;These a days chicken leg is a rare dish.&quot;   </div><div class="line">#&gt; [5] &quot;Rice often is served in round bowls.&quot;</div></pre></td></tr></table></figure>
+<h4 id="4-5-1-小练习"><a href="#4-5-1-小练习" class="headerlink" title="4.5.1 小练习"></a>4.5.1 小练习</h4><ol>
+<li><p>替换所有正斜线为反斜线。</p>
+</li>
+<li><p>用<code>replace_all()</code>来实现简单的<code>str_to_lower()</code>的功能。</p>
+</li>
+<li><p>用<code>words</code>中的所有第一和最后一个字母。哪些被替换后的字符串仍是正确的单词？</p>
+</li>
+</ol>
+<h3 id="4-6-切分"><a href="#4-6-切分" class="headerlink" title="4.6 切分"></a>4.6 切分</h3><p>用<code>str_split()</code>来将字符串切分为更小的部分。例如，我们可以将句子切分成单词：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">sentences %&gt;%</div><div class="line">  head(5) %&gt;% </div><div class="line">  str_split(&quot; &quot;)</div><div class="line">#&gt; [[1]]</div><div class="line">#&gt; [1] &quot;The&quot;     &quot;birch&quot;   &quot;canoe&quot;   &quot;slid&quot;    &quot;on&quot;      &quot;the&quot;     &quot;smooth&quot; </div><div class="line">#&gt; [8] &quot;planks.&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; [[2]]</div><div class="line">#&gt; [1] &quot;Glue&quot;        &quot;the&quot;         &quot;sheet&quot;       &quot;to&quot;          &quot;the&quot;        </div><div class="line">#&gt; [6] &quot;dark&quot;        &quot;blue&quot;        &quot;background.&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; [[3]]</div><div class="line">#&gt; [1] &quot;It&apos;s&quot;  &quot;easy&quot;  &quot;to&quot;    &quot;tell&quot;  &quot;the&quot;   &quot;depth&quot; &quot;of&quot;    &quot;a&quot;     &quot;well.&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; [[4]]</div><div class="line">#&gt; [1] &quot;These&quot;   &quot;days&quot;    &quot;a&quot;       &quot;chicken&quot; &quot;leg&quot;     &quot;is&quot;      &quot;a&quot;      </div><div class="line">#&gt; [8] &quot;rare&quot;    &quot;dish.&quot;  </div><div class="line">#&gt; </div><div class="line">#&gt; [[5]]</div><div class="line">#&gt; [1] &quot;Rice&quot;   &quot;is&quot;     &quot;often&quot;  &quot;served&quot; &quot;in&quot;     &quot;round&quot;  &quot;bowls.&quot;</div></pre></td></tr></table></figure>
+<p>因为每个部分的单词字母都不一样，这将返回一个列表。如果你在处理一个单字符长度的向量，最简单的方法是提取列表中的第一个元素：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&quot;a|b|c|d&quot; %&gt;% </div><div class="line">  str_split(&quot;\\|&quot;) %&gt;% </div><div class="line">  .[[1]]</div><div class="line">#&gt; [1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;</div></pre></td></tr></table></figure>
+<p>否则，你可以使用<code>simplify = TRUE</code>返回矩阵：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">sentences %&gt;%</div><div class="line">  head(5) %&gt;% </div><div class="line">  str_split(&quot; &quot;, simplify = TRUE)</div><div class="line">#&gt;      [,1]    [,2]    [,3]    [,4]      [,5]  [,6]    [,7]    </div><div class="line">#&gt; [1,] &quot;The&quot;   &quot;birch&quot; &quot;canoe&quot; &quot;slid&quot;    &quot;on&quot;  &quot;the&quot;   &quot;smooth&quot;</div><div class="line">#&gt; [2,] &quot;Glue&quot;  &quot;the&quot;   &quot;sheet&quot; &quot;to&quot;      &quot;the&quot; &quot;dark&quot;  &quot;blue&quot;  </div><div class="line">#&gt; [3,] &quot;It&apos;s&quot;  &quot;easy&quot;  &quot;to&quot;    &quot;tell&quot;    &quot;the&quot; &quot;depth&quot; &quot;of&quot;    </div><div class="line">#&gt; [4,] &quot;These&quot; &quot;days&quot;  &quot;a&quot;     &quot;chicken&quot; &quot;leg&quot; &quot;is&quot;    &quot;a&quot;     </div><div class="line">#&gt; [5,] &quot;Rice&quot;  &quot;is&quot;    &quot;often&quot; &quot;served&quot;  &quot;in&quot;  &quot;round&quot; &quot;bowls.&quot;</div><div class="line">#&gt;      [,8]          [,9]   </div><div class="line">#&gt; [1,] &quot;planks.&quot;     &quot;&quot;     </div><div class="line">#&gt; [2,] &quot;background.&quot; &quot;&quot;     </div><div class="line">#&gt; [3,] &quot;a&quot;           &quot;well.&quot;</div><div class="line">#&gt; [4,] &quot;rare&quot;        &quot;dish.&quot;</div><div class="line">#&gt; [5,] &quot;&quot;            &quot;&quot;</div></pre></td></tr></table></figure>
+<p>你也可以控制列数的数量：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fields &lt;- c(&quot;Name: Hadley&quot;, &quot;Country: NZ&quot;, &quot;Age: 35&quot;)</div><div class="line">fields %&gt;% str_split(&quot;: &quot;, n = 2, simplify = TRUE)</div><div class="line">#&gt;      [,1]      [,2]    </div><div class="line">#&gt; [1,] &quot;Name&quot;    &quot;Hadley&quot;</div><div class="line">#&gt; [2,] &quot;Country&quot; &quot;NZ&quot;    </div><div class="line">#&gt; [3,] &quot;Age&quot;     &quot;35&quot;</div></pre></td></tr></table></figure>
+<p>除了以模式来切分，你也可以以字符、行数、句子和单词来切分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;This is a sentence.  This is another sentence.&quot;</div><div class="line">str_view_all(x, boundary(&quot;word&quot;))</div></pre></td></tr></table></figure>
+<p>&lt;截图17&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">str_split(x, &quot; &quot;)[[1]]</div><div class="line">#&gt; [1] &quot;This&quot;      &quot;is&quot;        &quot;a&quot;         &quot;sentence.&quot; &quot;&quot;          &quot;This&quot;     </div><div class="line">#&gt; [7] &quot;is&quot;        &quot;another&quot;   &quot;sentence.&quot;</div><div class="line">str_split(x, boundary(&quot;word&quot;))[[1]]</div><div class="line">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot; &quot;This&quot;     &quot;is&quot;      </div><div class="line">#&gt; [7] &quot;another&quot;  &quot;sentence&quot;</div></pre></td></tr></table></figure>
+<h4 id="4-6-1-小练习"><a href="#4-6-1-小练习" class="headerlink" title="4.6.1 小练习"></a>4.6.1 小练习</h4><ol>
+<li><p>切分类似<code>&quot;apples, pears, and bananas&quot;</code>这样的字符串为一个个单词。</p>
+</li>
+<li><p>为什么用<code>boundary(word)</code>会比用<code>&quot; &quot;</code>来切分更好？</p>
+</li>
+<li><p>以空字符(<code>&quot;&quot;</code>)切分有什么用？试一下再阅读文档。</p>
+</li>
+</ol>
+<h3 id="4-7-寻找匹配位置"><a href="#4-7-寻找匹配位置" class="headerlink" title="4.7 寻找匹配位置"></a>4.7 寻找匹配位置</h3><p><code>str_locate()</code>和<code>str_locate_all()</code>可以给你提供每次匹配的始末点。你可以使用<code>str_locate()</code>来找到匹配模式，用<code>str_sub()</code>来提取和/或修改他们。</p>
+<h2 id="5-其他模式类型"><a href="#5-其他模式类型" class="headerlink" title="5 其他模式类型"></a>5 其他模式类型</h2><p>当使用的模式是字符串时，它将会自动包装成一次调用给<code>regex()</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"># The regular call:</div><div class="line">str_view(fruit, &quot;nana&quot;)</div><div class="line"># Is shorthand for</div><div class="line">str_view(fruit, regex(&quot;nana&quot;))</div></pre></td></tr></table></figure>
+<p>可以使用<code>regex()</code>的其他参数来控制匹配的细节：</p>
+<ul>
+<li><code>ignore_case = TRUE</code>可以无视大小写形式来匹配。其大小写会根据当前本地化设置而定：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">bananas &lt;- c(&quot;banana&quot;, &quot;Banana&quot;, &quot;BANANA&quot;)</div><div class="line">str_view(bananas, &quot;banana&quot;)</div></pre></td></tr></table></figure>
+<p>&lt;截图18&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">str_view(bananas, regex(&quot;banana&quot;, ignore_case = TRUE))</div></pre></td></tr></table></figure>
+<p>&lt;截图19&gt;</p>
+<ul>
+<li><code>multiline = TRUE</code>可以让<code>^</code>和<code>$</code>匹配每一行的始末位置，而不是整个字符串的石墨位置。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;Line 1\nLine 2\nLine 3&quot;</div><div class="line">str_extract_all(x, &quot;^Line&quot;)[[1]]</div><div class="line">#&gt; [1] &quot;Line&quot;</div><div class="line">str_extract_all(x, regex(&quot;^Line&quot;, multiline = TRUE))[[1]]</div><div class="line">#&gt; [1] &quot;Line&quot; &quot;Line&quot; &quot;Line&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>comments = TRUE</code>可以让你给复杂的正则表达式写注释。在这里空格会被无视，<code>#</code>后的也不会计入运行代码的部分。要想匹配一个空格，就要转义它：<code>&quot;\\ &quot;</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">phone &lt;- regex(&quot;</div><div class="line">  \\(?     # optional opening parens</div><div class="line">  (\\d&#123;3&#125;) # area code</div><div class="line">  [)- ]?   # optional closing parens, dash, or space</div><div class="line">  (\\d&#123;3&#125;) # another three numbers</div><div class="line">  [ -]?    # optional space or dash</div><div class="line">  (\\d&#123;3&#125;) # three more numbers</div><div class="line">  &quot;, comments = TRUE)</div><div class="line"></div><div class="line">str_match(&quot;514-791-8141&quot;, phone)</div><div class="line">#&gt;      [,1]          [,2]  [,3]  [,4] </div><div class="line">#&gt; [1,] &quot;514-791-814&quot; &quot;514&quot; &quot;791&quot; &quot;814&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>dotall = TRUE</code>将让<code>.</code>匹配所有字符，包括<code>\n</code>。</li>
+</ul>
+<p>以下是可以代替部分<code>regex()</code>功能的其他函数：</p>
+<ul>
+<li><code>fixed()</code>：能够匹配准确的字节序列。它会无视所有特别的正则表达式并在很低的水平上操作。这意味着你可以避免复杂的转义操作并可以比正则表达式匹配得更快：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">microbenchmark::microbenchmark(</div><div class="line">  fixed = str_detect(sentences, fixed(&quot;the&quot;)),</div><div class="line">  regex = str_detect(sentences, &quot;the&quot;),</div><div class="line">  times = 20</div><div class="line">)</div><div class="line">#&gt; Unit: microseconds</div><div class="line">#&gt;   expr min  lq mean median  uq  max neval</div><div class="line">#&gt;  fixed 157 164  228    170 272  603    20</div><div class="line">#&gt;  regex 588 611  664    635 672 1103    20</div></pre></td></tr></table></figure>
+<p>用<code>fixed()</code>处理非英文数据时要小心。因为通常会有很多种方法显示相同的字符，所以处理起来会很麻烦。例如，定义“á”有两种方法：用单独的该字符表示或是用”a”加上一个音符符号来表示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">a1 &lt;- &quot;\u00e1&quot;</div><div class="line">a2 &lt;- &quot;a\u0301&quot;</div><div class="line">c(a1, a2)</div><div class="line">#&gt; [1] &quot;á&quot; &quot;á&quot;</div><div class="line">a1 == a2</div><div class="line">#&gt; [1] FALSE</div></pre></td></tr></table></figure>
+<p>这样渲染出来的样子是一致的，但是定义过程却完全不同，所以<code>fixed()</code>在此无法得到匹配结果。然而使用<code>coll()</code>则可以按照人类对字符的对比规则来匹配：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">str_detect(a1, fixed(a2))</div><div class="line">#&gt; [1] FALSE</div><div class="line">str_detect(a1, coll(a2))</div><div class="line">#&gt; [1] TRUE</div></pre></td></tr></table></figure>
+<ul>
+<li><code>coll()</code>：使用标准排序规则来对比字符串。这在进行不分大小写的匹配中十分有用。但要注意，<code>coll()</code>在比较字符时使用了<code>locale</code>参数来控制所使用的规则。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"># 这意味着你还需要注意其规则的不同</div><div class="line"># 在做部分大小写的匹配时:</div><div class="line">i &lt;- c(&quot;I&quot;, &quot;İ&quot;, &quot;i&quot;, &quot;ı&quot;)</div><div class="line">i</div><div class="line">#&gt; [1] &quot;I&quot; &quot;İ&quot; &quot;i&quot; &quot;ı&quot;</div><div class="line"></div><div class="line">str_subset(i, coll(&quot;i&quot;, ignore_case = TRUE))</div><div class="line">#&gt; [1] &quot;I&quot; &quot;i&quot;</div><div class="line">str_subset(i, coll(&quot;i&quot;, ignore_case = TRUE, locale = &quot;tr&quot;))</div><div class="line">#&gt; [1] &quot;İ&quot; &quot;i&quot;</div></pre></td></tr></table></figure>
+<p><code>fixed()</code>和<code>regex()</code>都接收<code>ignore_case</code>参数，但它们不允许你选择本地化设置：它们都总会使用默认的本地化设置。你可以用以下代码查看当前的默认设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">stringi::stri_locale_info()</div><div class="line">#&gt; $Language</div><div class="line">#&gt; [1] &quot;en&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; $Country</div><div class="line">#&gt; [1] &quot;US&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; $Variant</div><div class="line">#&gt; [1] &quot;&quot;</div><div class="line">#&gt; </div><div class="line">#&gt; $Name</div><div class="line">#&gt; [1] &quot;en_US&quot;</div></pre></td></tr></table></figure>
+<p>然而<code>coll()</code>的不足之处就是速度。因为其识别字符是否一致的规则十分复杂，<code>coll()</code>相对于<code>regex()</code>和<code>fixed()</code>运行速度会慢很多。</p>
+<ul>
+<li>如你所知，你可以用<code>str_split()</code>中的<code>boundary()</code>来匹配边界。你也可以在其他函数使用这个参数：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">x &lt;- &quot;This is a sentence.&quot;</div><div class="line">str_view_all(x, boundary(&quot;word&quot;))</div></pre></td></tr></table></figure>
+<p>&lt;截图20&gt;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">str_extract_all(x, boundary(&quot;word&quot;))</div><div class="line">#&gt; [[1]]</div><div class="line">#&gt; [1] &quot;This&quot;     &quot;is&quot;       &quot;a&quot;        &quot;sentence&quot;</div></pre></td></tr></table></figure>
+<h3 id="5-1-小练习"><a href="#5-1-小练习" class="headerlink" title="5.1 小练习"></a>5.1 小练习</h3><ol>
+<li><p>用<code>regex()</code>和<code>fixed()</code>分别找到所有带有<code>\</code>的字符串。</p>
+</li>
+<li><p><code>sentences</code>数据中哪五个词最常见？</p>
+</li>
+</ol>
+<h2 id="6-正则表达式的其他用途"><a href="#6-正则表达式的其他用途" class="headerlink" title="6 正则表达式的其他用途"></a>6 正则表达式的其他用途</h2><p>在R语言基本函数中有两个十分有用的函数也用到了正则表达式：</p>
+<ul>
+<li><code>apropos()</code>会从全局环境中搜索所有可用对象。这在你无法记住函数名时特别有用。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">apropos(&quot;replace&quot;)</div><div class="line">#&gt; [1] &quot;%+replace%&quot;      &quot;replace&quot;         &quot;replace_na&quot;      &quot;str_replace&quot;    </div><div class="line">#&gt; [5] &quot;str_replace_all&quot; &quot;str_replace_na&quot;  &quot;theme_replace&quot;</div></pre></td></tr></table></figure>
+<ul>
+<li><code>dir()</code>将列出该目录下的所有文件。而<code>pattern</code>参数则接收一个正则表达式，返回符合模式的文件名。例如，你可以这样从当前目录找到所有R Markdown文件：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">head(dir(pattern = &quot;\\.Rmd$&quot;))</div><div class="line">#&gt; [1] &quot;communicate-plots.Rmd&quot; &quot;communicate.Rmd&quot;       &quot;datetimes.Rmd&quot;        </div><div class="line">#&gt; [4] &quot;EDA.Rmd&quot;               &quot;explore.Rmd&quot;           &quot;factors.Rmd&quot;</div></pre></td></tr></table></figure>
+<h2 id="7-stringi"><a href="#7-stringi" class="headerlink" title="7 stringi"></a>7 stringi</h2><p>stringr是在<strong>stringi</strong>的基础上构建的。stringr在你学习R语言时会很有用，因为这个包只用了一小部分函数，却解决了大多数字符串处理会遇到的问题。而stringi则是以功能的全面为目的。stringi包含了任何你需要的函数：stringi有232个函数，而stringr有43个函数。</p>
+<p>如果你发现在用stringr包无法处理一些问题的话，你可以试试stringi中的函数。这两个包的用法很相似，所以你可以很自然地从stringr过渡到stringi。二者最主要的区别在于前缀：<code>str_</code>和<code>stri_</code>。</p>
+<h3 id="7-1-小练习"><a href="#7-1-小练习" class="headerlink" title="7.1 小练习"></a>7.1 小练习</h3><ol>
+<li>找到stringi包中符合下列功能的函数：</li>
+</ol>
+<ul>
+<li><ol>
+<li>用来统计单词数量的函数。</li>
+</ol>
+</li>
+<li><ol>
+<li>用来找到重复字符串的函数。</li>
+</ol>
+</li>
+<li><ol>
+<li>生成随机文本的函数。</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>在使用<code>stri_sort()</code>函数时，如何控制分类的语言？</li>
+</ol>
+<blockquote>
+<p>注：本文由 Excelsior vcvc 翻译自 <a href="http://r4ds.had.co.nz/strings.html" target="_blank" rel="external">Hadley Wickham. R for Data Science - string</a></p>
+</blockquote>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</article>
+
+
+
+    <!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <p class="copyright text-muted">
+          Theme By <a target="_blank" href="https://github.com/levblanc">Levblanc.</a>
+          Inspired By <a target="_blank" href="https://github.com/klugjo/hexo-theme-clean-blog">Clean Blog.</a>
+        <p class="copyright text-muted">
+          Powered By <a target="_blank" href="https://hexo.io/">Hexo.</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    <!-- After Footer Scripts -->
+<script src="/js/highlight.pack.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var codeBlocks = Array.prototype.slice.call(document.getElementsByTagName('pre'))
+    codeBlocks.forEach(function(block, index) {
+      hljs.highlightBlock(block);
+    });
+  });
+</script>
+
+  </body>
+</html>
+
